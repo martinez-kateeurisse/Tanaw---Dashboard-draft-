@@ -127,8 +127,6 @@ def dashboard():
             selected_file_path = None
 
     # --- Logic for GET request or if POST failed ---
-    # If no year is selected (initial load or after failed POST),
-    # try to default to the latest available year.
     if not selected_year and available_years:
         selected_year = available_years[0] # Default to the latest year
         selected_file_path = available_datasets[selected_year]
@@ -148,11 +146,6 @@ def dashboard():
              selected_file_path = available_datasets[selected_year]
              session['selected_dashboard_year'] = selected_year
              session['selected_dashboard_file_path'] = selected_file_path
-
-
-    # The Dash app (created by create_dash_app) needs to read
-    # session['selected_dashboard_file_path'] within its callbacks
-    # to load the correct data dynamically.
 
     # Pass available years and the *currently* selected year to the template
     return render_template("dashboard.html",
@@ -198,7 +191,7 @@ def upload():
         # Step 2: Check if the file is valid
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            renamed_filename = f"{school_year}_{filename}"
+            renamed_filename = f"{school_year}_Dataset_({filename}).csv"
 
             school_year_folder = os.path.join(DATA_MANAGEMENT_FOLDER, school_year)
             os.makedirs(school_year_folder, exist_ok=True)
@@ -252,7 +245,7 @@ def upload_confirm():
         return redirect(request.url)
 
     school_year_folder = os.path.join(DATA_MANAGEMENT_FOLDER, school_year)
-    renamed_filename = f"{school_year}_{filename}"
+    renamed_filename = f"{school_year}_Dataset_({filename}).csv"
     final_path = os.path.join(school_year_folder, renamed_filename)
 
     try:
@@ -356,25 +349,46 @@ def preview():
 
 @app.route("/replace", methods=["POST"])
 def replace():
-    filename = request.form.get("filename")
+    original_filename_with_path = request.form.get("filename")
     new_file = request.files.get("new_file")
 
-    if filename and new_file and allowed_file(new_file.filename):
-        file_path = os.path.join(DATA_MANAGEMENT_FOLDER, filename)
+    if original_filename_with_path and new_file and allowed_file(new_file.filename):
+        old_file_path = os.path.join(DATA_MANAGEMENT_FOLDER, original_filename_with_path)
 
-        if os.path.exists(file_path):
+        if os.path.exists(old_file_path):
             try:
-                # Save the new file to the same location
-                new_path = os.path.join(DATA_MANAGEMENT_FOLDER, filename)
-                new_file.save(new_path)
+                relative_dir = os.path.dirname(original_filename_with_path)
+                if not relative_dir:
+                    raise ValueError("Could not determine school year directory from original path.")
+                school_year = os.path.basename(relative_dir)
 
-                flash("Dataset replaced successfully.", 'success')
+                uploaded_filename = new_file.filename
+                new_base_name, _ = os.path.splitext(uploaded_filename)
+
+                new_target_filename_only = f"{school_year}_Dataset_({new_base_name}).csv"
+                new_target_path = os.path.join(DATA_MANAGEMENT_FOLDER, relative_dir, new_target_filename_only)
+
+                os.remove(old_file_path)
+                new_file.save(new_target_path)
+
+                saved_relative_path = os.path.join(relative_dir, new_target_filename_only)
+                #flash(f"Dataset '{original_filename_with_path}' replaced successfully (saved as '{saved_relative_path}').", 'success')
+
+            except ValueError as e:
+                flash(f"Error processing path/filename: {str(e)}", 'error')
+            except OSError as e:
+                 flash(f"Error during file operation: {str(e)}", 'error')
             except Exception as e:
                 flash(f"Error replacing dataset: {str(e)}", 'error')
         else:
-            flash(f"Dataset '{filename}' not found.", 'error')
+            flash(f"Original dataset '{original_filename_with_path}' not found at '{old_file_path}'.", 'error')
+
+    elif not original_filename_with_path or not new_file:
+         flash("Filename or new file missing.", 'error')
+    elif new_file and not allowed_file(new_file.filename):
+        flash("Invalid file type for the new file.", 'error')
     else:
-        flash("Invalid file or dataset not found.", 'error')
+        flash("Invalid request.", 'error')
 
     return redirect(url_for("data_management"))
 
