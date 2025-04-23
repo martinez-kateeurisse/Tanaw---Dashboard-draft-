@@ -1,1 +1,1 @@
-c:\Users\acer\Downloads\TANAW-main\TANAW-main\Case Study\static\Cleaned_School_DataSet.csv
+c:\Users\Kate\Desktop\BigData Proj\Tanaw---Dashboard-draft-\static\Cleaned_School_DataSet.csv

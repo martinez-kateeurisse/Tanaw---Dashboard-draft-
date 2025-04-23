@@ -8,6 +8,9 @@ from datetime import datetime
 from report import create_dash_app_report
 import pandas as pd
 import base64
+import uuid
+import shutil
+
 # Import functions from your new comparison module
 from comparison import find_available_datasets, prepare_comparison_charts_data
 
@@ -20,7 +23,7 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static')
 CLEANED_FOLDER = os.path.join(os.path.dirname(__file__), 'cleaned_files')
 ACTIVE_DATASET_FOLDER = os.path.join(BASE_DIR, 'active_dataset')
-
+TEMP_UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'temp_folder')
 # ✅ New: Folder where cleaned datasets will be stored by school year
 DATA_MANAGEMENT_FOLDER = os.path.join(os.path.dirname(__file__), 'data_management')
 
@@ -28,6 +31,7 @@ DATA_MANAGEMENT_FOLDER = os.path.join(os.path.dirname(__file__), 'data_managemen
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(CLEANED_FOLDER, exist_ok=True)
 os.makedirs(DATA_MANAGEMENT_FOLDER, exist_ok=True)
+os.makedirs(TEMP_UPLOAD_FOLDER, exist_ok=True)
 
 # Allowed file types
 ALLOWED_EXTENSIONS = {'csv'}
@@ -352,45 +356,128 @@ def replace():
     original_filename_with_path = request.form.get("filename")
     new_file = request.files.get("new_file")
 
-    if original_filename_with_path and new_file and allowed_file(new_file.filename):
-        old_file_path = os.path.join(DATA_MANAGEMENT_FOLDER, original_filename_with_path)
+    # --- Variables for temporary paths ---
+    temp_raw_path = None
+    cleaned_temp_output_path = None
 
-        if os.path.exists(old_file_path):
-            try:
-                relative_dir = os.path.dirname(original_filename_with_path)
-                if not relative_dir:
-                    raise ValueError("Could not determine school year directory from original path.")
-                school_year = os.path.basename(relative_dir)
+    # --- Initial checks ---
+    if not original_filename_with_path or not new_file:
+        flash("Filename or new file missing.", 'error')
+        return redirect(url_for("data_management")) # Use the correct endpoint name
 
-                uploaded_filename = new_file.filename
-                new_base_name, _ = os.path.splitext(uploaded_filename)
-
-                new_target_filename_only = f"{school_year}_Dataset_({new_base_name}).csv"
-                new_target_path = os.path.join(DATA_MANAGEMENT_FOLDER, relative_dir, new_target_filename_only)
-
-                os.remove(old_file_path)
-                new_file.save(new_target_path)
-
-                saved_relative_path = os.path.join(relative_dir, new_target_filename_only)
-                #flash(f"Dataset '{original_filename_with_path}' replaced successfully (saved as '{saved_relative_path}').", 'success')
-
-            except ValueError as e:
-                flash(f"Error processing path/filename: {str(e)}", 'error')
-            except OSError as e:
-                 flash(f"Error during file operation: {str(e)}", 'error')
-            except Exception as e:
-                flash(f"Error replacing dataset: {str(e)}", 'error')
-        else:
-            flash(f"Original dataset '{original_filename_with_path}' not found at '{old_file_path}'.", 'error')
-
-    elif not original_filename_with_path or not new_file:
-         flash("Filename or new file missing.", 'error')
-    elif new_file and not allowed_file(new_file.filename):
+    if not allowed_file(new_file.filename):
         flash("Invalid file type for the new file.", 'error')
-    else:
-        flash("Invalid request.", 'error')
+        return redirect(url_for("data_management"))
 
-    return redirect(url_for("data_management"))
+    # --- Path definitions ---
+    old_file_path = os.path.join(DATA_MANAGEMENT_FOLDER, original_filename_with_path)
+
+    if not os.path.exists(old_file_path):
+        # Check if the old file exists before proceeding
+        flash(f"Original dataset '{original_filename_with_path}' not found.", 'error')
+        return redirect(url_for("data_management"))
+
+    try:
+        # --- Determine final target path ---
+        relative_dir = os.path.dirname(original_filename_with_path)
+        if not relative_dir:
+            raise ValueError("Could not determine school year directory from original path.")
+        school_year = os.path.basename(relative_dir) # Extract school year if needed for naming
+
+        uploaded_filename = new_file.filename # Keep original uploaded filename for base
+        new_base_name, file_ext = os.path.splitext(uploaded_filename) # Get base name
+
+        # Define the final filename for the *cleaned* data (adjust naming as needed)
+        # Using original base name + _cleaned suffix
+        new_target_filename_only = f"{school_year}_Dataset_({new_base_name})_cleaned{file_ext}"
+        new_target_path = os.path.join(DATA_MANAGEMENT_FOLDER, relative_dir, new_target_filename_only)
+
+        # --- Save uploaded file temporarily ---
+        os.makedirs(TEMP_UPLOAD_FOLDER, exist_ok=True)
+        # Create a unique temp filename to avoid conflicts
+        temp_filename = f"temp_replace_{uuid.uuid4()}_{uploaded_filename}"
+        temp_raw_path = os.path.join(TEMP_UPLOAD_FOLDER, temp_filename)
+        new_file.save(temp_raw_path)
+        print(f"Saved uploaded file temporarily to: {temp_raw_path}")
+
+        # --- Clean the temporary file using the ORIGINAL clean_data ---
+
+        print(f"Attempting to clean '{temp_raw_path}' using original clean_data...")
+        try:
+            # Call your unmodified clean_data function
+            cleaned_temp_output_path = clean_data(temp_raw_path)
+
+            # Basic check: Ensure clean_data returned a string path
+            if not cleaned_temp_output_path or not isinstance(cleaned_temp_output_path, str):
+                 print("clean_data did not return a valid path string.")
+                 # Treat as failure, raise an error to be caught by outer except block
+                 raise ValueError("Data cleaning process failed to produce an output file path.")
+            if not os.path.exists(cleaned_temp_output_path):
+                 print(f"clean_data returned path '{cleaned_temp_output_path}' but file does not exist.")
+                 raise ValueError("Data cleaning process failed, output file not found.")
+
+            print(f"clean_data successful, returned path: {cleaned_temp_output_path}")
+
+        except (ValueError, TypeError, OSError, Exception) as clean_error:
+            # Catch potential errors specifically from clean_data
+            print(f"Data cleaning function failed with error: {clean_error}")
+            flash(f"Data cleaning failed for '{uploaded_filename}': {str(clean_error)}. The original dataset was not replaced.", 'error')
+            raise clean_error
+
+        print(f"Moving cleaned file from '{cleaned_temp_output_path}' to '{new_target_path}'")
+        shutil.move(cleaned_temp_output_path, new_target_path)
+
+        # --- Success: File moved, now remove the original old file ---
+        print(f"Cleaned file moved successfully. Removing old file: {old_file_path}")
+        try:
+            os.remove(old_file_path)
+            print(f"Removed old file: {old_file_path}")
+        except OSError as e:
+            # Log error but proceed; maybe flash a warning
+            print(f"Warning: Could not remove old file '{old_file_path}'. Error: {e}")
+            flash(f"Warning: Replaced data, but could not remove old file '{os.path.basename(original_filename_with_path)}'.", 'warning')
+
+
+        saved_relative_path = os.path.join(relative_dir, new_target_filename_only)
+        #flash(f"Dataset '{os.path.basename(original_filename_with_path)}' replaced and cleaned successfully (saved as '{saved_relative_path}').", 'success')
+
+    # --- Outer error handling ---
+    except (ValueError, TypeError, OSError) as e: # Catch errors from file ops, path processing, or re-raised clean_error
+        if "Data cleaning failed" not in str(e): # Simple check
+             flash(f"Error during replacement process: {str(e)}", 'error')
+        # Ensure the old file is NOT removed if we land here due to an error BEFORE os.remove(old_file_path)
+    except Exception as e:
+        flash(f"An unexpected error occurred during replacement: {str(e)}", 'error')
+        print(f"Unexpected error in /replace: {e}") # Log details for debugging
+    finally:
+        # --- Clean up temporary files ---
+        # Always remove the initial raw temporary file if it exists
+        if temp_raw_path and os.path.exists(temp_raw_path):
+            try:
+                os.remove(temp_raw_path)
+                print(f"Removed temporary raw input file: {temp_raw_path}")
+            except OSError as e:
+                print(f"Error removing temporary raw input file '{temp_raw_path}': {e}")
+
+        # Attempt to clean up the temporary *output* file from clean_data IF it exists
+        # This handles cases where clean_data succeeded but the move failed, or if clean_data errored *after* creating the file.
+        if cleaned_temp_output_path and os.path.exists(cleaned_temp_output_path):
+            # Check if it still exists (it shouldn't if the move was successful)
+             print(f"Cleaning up temporary output file: {cleaned_temp_output_path}")
+             try:
+                 # Optionally remove the 'cleaned_files' directory if it's empty and inside TEMP_UPLOAD_FOLDER
+                 cleaned_dir = os.path.dirname(cleaned_temp_output_path)
+                 os.remove(cleaned_temp_output_path) # Remove the file first
+                 if os.path.basename(cleaned_dir) == 'cleaned_files' and \
+                    os.path.normpath(os.path.dirname(cleaned_dir)) == os.path.normpath(TEMP_UPLOAD_FOLDER) and \
+                    not os.listdir(cleaned_dir): # Check if empty after removing file
+                      os.rmdir(cleaned_dir)
+                      print(f"Removed empty temporary cleaned_files directory: {cleaned_dir}")
+             except OSError as e:
+                 print(f"Error removing temporary output file or dir '{cleaned_temp_output_path}': {e}")
+
+
+    return redirect(url_for("data_management")) 
 
 @app.route("/download", methods=["POST"])
 def download():
@@ -599,3 +686,4 @@ if __name__ == "__main__":
 # Triggering auto-reload at 2025-04-23 01:42:02
 # Triggering auto-reload at 2025-04-23 01:46:16
 # Triggering auto-reload at 2025-04-23 02:24:32
+# Triggering auto-reload at 2025-04-23 16:38:01
