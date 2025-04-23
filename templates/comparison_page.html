@@ -1,0 +1,481 @@
+{% extends "page_temp.html" %}
+
+{% block title %}Data Management{% endblock %}
+
+{% block content %}
+
+<title>School Year Comparison</title>
+<style>
+    /* Basic styling for the comparison page */
+    body {
+        font-family: sans-serif; /* Use your preferred font */
+        line-height: 1.6;
+        margin: 0;
+        padding: 0; /* Removed default body padding */
+        background-color: #f4f4f4; /* Light background */
+        color: #333; /* Default text color */
+        display: flex; /* Use flexbox for layout */
+        flex-direction: column; /* Stack elements vertically */
+        min-height: 100vh; /* Ensure body takes at least full viewport height */
+    }
+
+    .container {
+        max-width: 1200px; /* Max width for content */
+        margin: 20px auto; /* Center the container with top/bottom margin */
+        background: #fff; /* White background for the content area */
+        padding: 20px;
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        flex-grow: 1; /* Allow container to grow and fill space */
+    }
+
+    h1, h2, h3 {
+        color: var(--deped-blue, #00308f); /* Use your theme color for headings */
+        margin-bottom: 15px;
+    }
+
+    /* Styles for the control area (dropdowns and button) */
+    .comparison-controls {
+        display: flex; /* Arrange items in a row */
+        flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+        gap: 20px; /* Spacing between items */
+        align-items: center; /* Vertically align items */
+        margin-bottom: 30px; /* Space below the controls */
+        padding: 15px;
+        background-color: #f9f9f9; /* Slightly different background for controls */
+        border-radius: 4px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08);
+    }
+
+    .comparison-controls form {
+         display: flex; /* Make form a flex container */
+         flex-wrap: wrap; /* Allow form items to wrap */
+         gap: 20px; /* Space between form elements */
+         align-items: center; /* Vertically align form elements */
+         width: 100%; /* Make form take full width of its container */
+    }
+
+
+    .year-selector {
+        display: flex; /* Arrange label and dropdown in a row */
+        align-items: center; /* Vertically align label and dropdown */
+        /* Allow this item to grow and shrink */
+        flex-grow: 1;
+        flex-shrink: 1;
+        min-width: 200px; /* Minimum width before wrapping */
+    }
+
+    .selector-label {
+         font-weight: bold;
+         color: var(--deped-blue, #00308f); /* Use your theme colors */
+         margin-right: 10px;
+         font-size: 1rem;
+         white-space: nowrap; /* Prevent label from wrapping */
+    }
+
+    /* Reusing or adapting the dropdown styles from your dashboard */
+    .comparison-dropdown {
+        flex-grow: 1; /* Allow dropdown to fill available space */
+        padding: 8px 12px;
+        border: 1px solid var(--deped-gray, #cccccc);
+        border-radius: var(--border-radius-sm, 4px);
+        font-size: 1rem;
+        color: var(--text-dark, #333333);
+        background-color: var(--deped-white, #ffffff);
+        appearance: none; /* Remove default arrow */
+        -webkit-appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 12px;
+        padding-right: 30px;
+        cursor: pointer;
+        transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .comparison-dropdown:hover {
+         border-color: var(--deped-blue, #00308f);
+    }
+
+    .comparison-dropdown:focus {
+        outline: none;
+        border-color: var(--deped-blue, #00308f);
+        box-shadow: 0 0 5px rgba(0, 48, 143, 0.3);
+    }
+
+     .comparison-dropdown option[disabled] {
+         color: var(--deped-gray, #cccccc);
+    }
+
+     /* Style for the selected option in the closed dropdown */
+    .comparison-dropdown:not(:valid) {
+        color: var(--deped-gray, #cccccc); /* If the default disabled option is selected */
+    }
+
+    /* Style for actual selected options */
+    .comparison-dropdown option:checked {
+         color: var(--text-dark, #333333); /* Ensure selected option has dark text */
+    }
+
+
+    .compare-button {
+        padding: 10px 20px;
+        background-color: var(--deped-blue, #00308f); /* Your theme color */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.2s ease;
+        /* Optional: Prevent button from shrinking too much */
+        flex-shrink: 0;
+    }
+
+    .compare-button:hover {
+        background-color: #002060; /* Darker shade on hover */
+    }
+
+     .compare-button:active {
+         background-color: #001030; /* Even darker when clicked */
+     }
+
+
+    /* Styles for the visualization area */
+    .comparison-visualizations {
+        margin-top: 20px;
+        border-top: 1px solid #eee; /* Separator line */
+        padding-top: 20px;
+    }
+
+    /* Styles for individual visualization containers */
+    .visualization-container {
+        background-color: #ffffff; /* White background for visualization box */
+        border: 1px solid #ddd; /* Light border */
+        border-radius: 4px;
+        padding: 20px;
+        margin-bottom: 20px; /* Space between visualizations */
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+        /* --- Fixed Size --- */
+        height: 400px; /* Fixed height for the container */
+        width: 100%;   /* Let it take the full width of its parent */
+        /* --- End Fixed Size --- */
+        position: relative; /* Needed for chart responsiveness */
+    }
+
+    .visualization-placeholder {
+        background-color: #e9e9e9; /* Grey background for placeholder */
+        padding: 30px;
+        text-align: center;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        color: #666;
+        font-style: italic;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+        .comparison-controls form {
+             flex-direction: column; /* Stack form items vertically on small screens */
+             align-items: stretch; /* Stretch items to fill width */
+        }
+
+        .year-selector {
+             flex-direction: column; /* Stack label and dropdown vertically */
+             align-items: flex-start; /* Align items to the start */
+             min-width: auto; /* Remove min-width constraint */
+             width: 100%; /* Take full width */
+        }
+
+        .selector-label {
+             margin-right: 0;
+             margin-bottom: 5px; /* Space between label and dropdown */
+        }
+
+        .comparison-dropdown {
+             width: 100%; /* Make dropdown take full width */
+        }
+
+        .compare-button {
+             width: 100%; /* Make button take full width */
+        }
+    }
+
+ 
+        /* Styles for Back Button Container (No change needed from previous version) */
+        .back-button-container {
+            margin-top: 30px;    /* Space above the button */
+            padding-top: 20px;   /* Padding above the button inside the container */
+            border-top: 1px solid var(--deped-gray, #D3D3D3); /* Use theme gray for separator */
+            text-align: center; /* Center the button */
+        }
+
+        /* Styles for the Back Button (Default State - Solid Blue) */
+        .back-button {
+            display: inline-block; /* Allow padding and margins */
+            padding: 10px 25px; /* Adjust padding as needed */
+            background-color: var(--deped-blue, #00308F); /* Default: Blue background */
+            color: var(--deped-white, #FFFFFF); /* Default: White text */
+            border: 1px solid var(--deped-blue, #00308F); /* Default: Blue border (matches background) */
+            border-radius: var(--border-radius-sm, 5px); /* Use theme radius */
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none; /* Remove underline from link */
+            transition: var(--transition-default, all 0.3s ease-in-out); /* Use theme transition */
+            box-shadow: none; /* No shadow in default state */
+        }
+
+        /* Styles for Hover & Focus (White Background) */
+        .back-button:hover,
+        .back-button:focus {
+            background-color: var(--deped-white, #FFFFFF); /* Hover: White background */
+            color: var(--deped-blue, #00308F); /* Hover: Blue text */
+            border: 1px solid var(--deped-blue, #00308F); /* Hover: Blue border (now visible) */
+            box-shadow: var(--box-shadow-sm, 0 2px 5px rgba(0, 0, 0, 0.08)); /* Hover: Add shadow */
+            outline: none; /* Remove default focus outline */
+        }
+
+        /* Optional: Style for when the button is actively being clicked (based on hover state) */
+        .back-button:active {
+            background-color: var(--deped-white, #FFFFFF); /* Keep white background */
+            /* Slightly darken the text/border for feedback */
+            color: #002060; /* Example: Darker variant of --deped-blue */
+            border-color: #002060; /* Example: Darker variant of --deped-blue */
+            box-shadow: none; /* Remove shadow during click */
+        }
+
+    /* Basic Footer Styling */
+    footer {
+        background-color: #333; /* Dark background for footer */
+        color: #fff; /* Light text */
+        text-align: center;
+        padding: 15px 0;
+        margin-top: 20px; /* Space above the footer */
+        flex-shrink: 0; /* Prevent footer from shrinking */
+    }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>School Year Comparison</h1>
+
+    <div class="comparison-controls">
+        <form method="POST" action="{{ url_for('compare') }}">
+            <div class="year-selector">
+                <label for="school_year_1" class="selector-label">Compare Year 1:</label>
+                <select name="school_year_1" id="school_year_1" class="comparison-dropdown" required>
+                    <option value="" disabled {% if not selected_year_1 %}selected{% endif %}>Select Year 1</option>
+                     {% if not available_years %}
+                         <option value="" disabled>No data available</option>
+                     {% endif %}
+                     {% for year in available_years %}
+                         <option value="{{ year }}" {% if year == selected_year_1 %}selected{% endif %}>
+                             {{ year }}
+                         </option>
+                     {% endfor %}
+                </select>
+            </div>
+
+            <div class="year-selector">
+                <label for="school_year_2" class="selector-label">Compare Year 2:</label>
+                <select name="school_year_2" id="school_year_2" class="comparison-dropdown" required>
+                    <option value="" disabled {% if not selected_year_2 %}selected{% endif %}>Select Year 2</option>
+                     {% if not available_years %}
+                         <option value="" disabled>No data available</option>
+                     {% endif %}
+                     {% for year in available_years %}
+                         <option value="{{ year }}" {% if year == selected_year_2 %}selected{% endif %}>
+                             {{ year }}
+                         </option>
+                     {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="compare-button">Compare</button>
+        </form>
+    </div>
+
+    <div class="comparison-visualizations">
+        <h2>Comparison Results</h2>
+
+        {% if comparison_data %}
+
+            <div class="visualization-container">
+                <h3>Total Enrollment Comparison ({{ comparison_data.year1_label }} vs {{ comparison_data.year2_label }})</h3>
+                 <canvas id="totalEnrollmentChart"></canvas>
+            </div>
+
+             <div class="visualization-container">
+                <h3>Enrollment by Year Level Comparison ({{ comparison_data.year1_label }} vs {{ comparison_data.year2_label }})</h3>
+                 <canvas id="enrollmentByYearLevelChart"></canvas>
+             </div>
+
+             <div class="visualization-container">
+                <h3>Enrollment by Region Comparison ({{ comparison_data.year1_label }} vs {{ comparison_data.year2_label }})</h3>
+                 <canvas id="enrollmentByRegionChart"></canvas>
+             </div>
+
+
+        {% else %}
+            <p>Select two school years above and click "Compare" to see visualizations.</p>
+        {% endif %}
+
+    </div>
+</div> <div class="back-button-container">
+    {# IMPORTANT: Replace 'report_page_endpoint' with the actual name of your Flask route for the report page #}
+    <a href="{{ url_for('report') }}" class="back-button">
+        &larr; Back to Reports
+    </a>
+     {# Using &larr; for a left arrow visually #}
+</div>
+
+</div> <footer>
+    <p>&copy; {{ current_year }} School Data Portal. All rights reserved.</p>
+    </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Get the comparison data passed from Flask
+    // Use | tojson | default('null') to safely handle cases where comparison_data is None
+    var comparisonData = {{ comparison_data | default(none) | tojson }};
+
+    // Function to render a bar chart
+    function renderBarChart(canvasId, chartTitle, chartData) {
+        var ctx = document.getElementById(canvasId).getContext('2d');
+        new Chart(ctx, {
+            type: 'bar', // Use 'bar' for bar charts
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Allow chart to fill container height
+                plugins: {
+                    title: {
+                        display: false, // Title is already in H3
+                        text: chartTitle
+                    },
+                    legend: {
+                        display: true // Show legend for multiple datasets
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Students'
+                        }
+                    },
+                    x: {
+                         title: {
+                             display: chartData.labels && chartData.labels.length > 10 ? true : false, // Add axis title if many labels
+                             text: 'Category'
+                         },
+                         ticks: {
+                              autoSkip: (chartData.labels && chartData.labels.length > 20), // Auto-skip ticks if too many labels
+                              maxRotation: 90, // Rotate labels if needed
+                              minRotation: 0
+                         }
+                    }
+                }
+            }
+        });
+    }
+
+     // Function to render a grouped bar chart (suitable for year level or region comparison)
+    function renderGroupedBarChart(canvasId, chartTitle, chartData) {
+        var ctx = document.getElementById(canvasId).getContext('2d');
+        new Chart(ctx, {
+            type: 'bar', // Still 'bar', but options configure grouping
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: false,
+                        text: chartTitle
+                    },
+                     legend: {
+                        display: true
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                         title: {
+                             display: true,
+                             text: 'Number of Students'
+                         }
+                    },
+                    x: {
+                         title: {
+                             display: chartData.labels && chartData.labels.length > 10 ? true : false,
+                             text: 'Category'
+                         },
+                         ticks: {
+                              autoSkip: (chartData.labels && chartData.labels.length > 20),
+                              maxRotation: 90,
+                              minRotation: 0
+                         }
+                    }
+                }
+            }
+        });
+    }
+
+
+    // Check if comparison data exists and is not null before trying to render charts
+    if (comparisonData && comparisonData !== null) {
+        console.log("Rendering charts with data:", comparisonData); // Debugging
+
+        // Render Total Enrollment Chart (Simple Bar Chart)
+        if (comparisonData.total_enrollment && document.getElementById('totalEnrollmentChart')) { // Check if element exists
+             renderBarChart(
+                 'totalEnrollmentChart',
+                 'Total Enrollment Comparison',
+                 comparisonData.total_enrollment
+             );
+        } else if (comparisonData.total_enrollment) {
+             console.warn("Total enrollment data found, but canvas 'totalEnrollmentChart' does not exist.");
+        } else {
+            console.warn("Total enrollment data not found in comparisonData.");
+        }
+
+
+        // Render Enrollment by Year Level Chart (Grouped Bar Chart)
+        if (comparisonData.enrollment_by_year_level && document.getElementById('enrollmentByYearLevelChart')) { // Check if element exists
+             renderGroupedBarChart(
+                 'enrollmentByYearLevelChart',
+                 'Enrollment by Year Level Comparison',
+                 comparisonData.enrollment_by_year_level
+             );
+        } else if (comparisonData.enrollment_by_year_level) {
+            console.warn("Enrollment by year level data found, but canvas 'enrollmentByYearLevelChart' does not exist.");
+        } else {
+             console.warn("Enrollment by year level data not found in comparisonData.");
+        }
+
+        // Render Enrollment by Region Chart (Grouped Bar Chart)
+        if (comparisonData.enrollment_by_region && document.getElementById('enrollmentByRegionChart')) { // Check if element exists
+             renderGroupedBarChart(
+                 'enrollmentByRegionChart',
+                 'Enrollment by Region Comparison',
+                 comparisonData.enrollment_by_region
+             );
+        } else if (comparisonData.enrollment_by_region) {
+            console.warn("Enrollment by region data found, but canvas 'enrollmentByRegionChart' does not exist.");
+        } else {
+             console.warn("Enrollment by region data not found in comparisonData.");
+        }
+
+
+        // Add rendering logic for other charts here if you add them
+    } else {
+        console.log("No comparison data available or data is null. Not rendering charts."); // Debugging
+    }
+
+</script>
+{% endblock %}

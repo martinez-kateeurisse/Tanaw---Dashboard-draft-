@@ -8,6 +8,8 @@ from datetime import datetime
 from report import create_dash_app_report
 import pandas as pd
 import base64
+# Import functions from your new comparison module
+from comparison import find_available_datasets, prepare_comparison_charts_data
 
 app = Flask(__name__)
 app.secret_key = 'secret123'
@@ -463,6 +465,114 @@ def rerun_app():
         flash(f"Error triggering auto-reload: {str(e)}", "error")
 
     return redirect(url_for('home'))
+
+# --- Updated Comparison Route ---
+@app.route('/compare', methods=['GET', 'POST'])
+def compare():
+    """
+    Handles the comparison page, allowing users to select and compare data
+    from two different school years.
+    """
+    # Call find_available_datasets from the comparison module
+    available_datasets, available_years = find_available_datasets()
+
+    selected_year_1 = session.get('selected_comparison_year_1', None)
+    selected_year_2 = session.get('selected_comparison_year_2', None)
+
+    comparison_data = None # This will hold the data structure for your visualizations
+    selected_file_path_1 = None
+    selected_file_path_2 = None
+
+    print(f"Compare (Initial/GET): Session years - Year 1: {selected_year_1}, Year 2: {selected_year_2}") # Debugging
+
+
+    if request.method == 'POST':
+        newly_selected_year_1 = request.form.get('school_year_1')
+        newly_selected_year_2 = request.form.get('school_year_2')
+
+        print(f"Compare (POST): Received years - Year 1: {newly_selected_year_1}, Year 2: {newly_selected_year_2}") # Debugging
+
+        # --- Validation ---
+        validation_error = None
+        if not newly_selected_year_1 or not newly_selected_year_2:
+            validation_error = "Please select both school years for comparison."
+        elif newly_selected_year_1 not in available_datasets or newly_selected_year_2 not in available_datasets:
+             validation_error = "One or both selected school years are invalid."
+        elif newly_selected_year_1 == newly_selected_year_2:
+            validation_error = "Please select two *different* years for comparison."
+
+        if validation_error:
+            flash(validation_error, "warning")
+            print(f"Validation failed: {validation_error}") # Debugging
+            # Keep existing session selections if they exist
+            # Note: The template will render with the years from the POST request
+            # even if validation failed, but the flash message will explain why
+            # no comparison data is shown.
+            selected_year_1 = newly_selected_year_1 # Keep the years the user tried to select
+            selected_year_2 = newly_selected_year_2
+        else:
+            # --- Validation Passed ---
+            print("Validation successful. Updating session and redirecting.") # Debugging
+            selected_year_1 = newly_selected_year_1
+            selected_year_2 = newly_selected_year_2
+
+            # Store the validated selected years in the session
+            session['selected_comparison_year_1'] = selected_year_1
+            session['selected_comparison_year_2'] = selected_year_2
+
+            # Redirect to the GET route to prevent form resubmission on refresh
+            return redirect(url_for('compare'))
+
+    # --- Logic for GET request or after POST redirect/failure ---
+
+    # If we have selected years in the session (either from initial GET or after a successful POST redirect),
+    # and they are valid, load and process the data for comparison.
+    if selected_year_1 and selected_year_2 \
+       and selected_year_1 in available_datasets and selected_year_2 in available_datasets \
+       and selected_year_1 != selected_year_2: # Ensure they are different, even if session somehow stored same
+
+        print(f"Compare (GET/Post-Redirect): Loading data for {selected_year_1} vs {selected_year_2} from session.") # Debugging
+        selected_file_path_1 = available_datasets[selected_year_1]
+        selected_file_path_2 = available_datasets[selected_year_2]
+
+        # --- Call the data processing function from the comparison module ---
+        comparison_data = prepare_comparison_charts_data(
+            selected_file_path_1,
+            selected_file_path_2,
+            selected_year_1, # Pass years as labels for charts
+            selected_year_2
+        )
+
+        if comparison_data is None:
+             flash("Failed to load or process data for comparison.", "danger")
+             print("Error: prepare_comparison_charts_data returned None.") # Debugging
+             # Optionally clear session if data loading failed
+             session.pop('selected_comparison_year_1', None)
+             session.pop('selected_comparison_year_2', None)
+             selected_year_1 = None
+             selected_year_2 = None
+
+
+    elif (selected_year_1 or selected_year_2) and \
+         (selected_year_1 not in available_datasets or selected_year_2 not in available_datasets or selected_year_1 == selected_year_2):
+         # Handle case where session years are no longer valid or are the same
+         # This might happen if available_datasets changed since the session was set
+         flash("Data for previously selected comparison years not found or years are the same. Please select again.", "warning")
+         print("Session years invalid or same. Clearing session.") # Debugging
+         session.pop('selected_comparison_year_1', None)
+         session.pop('selected_comparison_year_2', None)
+         selected_year_1 = None
+         selected_year_2 = None
+         comparison_data = None # Ensure no old data is shown
+
+
+    # Render the comparison template
+    return render_template('comparison_page.html',
+                           available_years=available_years,
+                           selected_year_1=selected_year_1,
+                           selected_year_2=selected_year_2,
+                           comparison_data=comparison_data # Pass the data structure for template to use
+                          )
 
 # Mount Dash app
 dash_app_works = create_dash_app(app)

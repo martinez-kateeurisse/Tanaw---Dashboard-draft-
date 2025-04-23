@@ -724,6 +724,75 @@
 <i class="fas fa-exchange-alt"></i> Compare Other Years
                 </a>
 </div>
+
+<div class="comparison-link-container">
+    <a href="{{ url_for('compare') }}" class="compare-page-button">Go to Comparison</a>
+</div>
+
+<style>
+     .comparison-link-container {
+        margin-left: 20px;
+    }
+
+    /* Style for the Compare Page Button (Light/Subtle Style) */
+    .compare-page-button {
+        display: inline-block; /* Allows padding and margin */
+        padding: 8px 15px; /* Adjust padding for desired size */
+        background-color: var(--deped-white, #FFFFFF); /* Use white background */
+        color: var(--text-dark, #333); /* Use standard dark text */
+        border: 1px solid var(--deped-gray, #D3D3D3); /* Use theme gray for border */
+        border-radius: var(--border-radius-sm, 5px); /* Use theme radius */
+        text-decoration: none; /* Remove underline from link */
+        font-size: 1rem; /* Match font size with other controls */
+        cursor: pointer; /* Indicate it's clickable */
+        transition: var(--transition-default, all 0.3s ease-in-out); /* Use theme transition */
+        box-shadow: none; /* No default shadow */
+    }
+
+    /* Style for Hover & Focus */
+    .compare-page-button:hover,
+    .compare-page-button:focus {
+        background-color: var(--deped-white, #FFFFFF); /* Keep white background */
+        color: var(--deped-blue, #00308F); /* Change text color to blue */
+        border-color: var(--deped-blue, #00308F); /* Change border color to blue */
+        box-shadow: var(--box-shadow-sm, 0 2px 5px rgba(0, 0, 0, 0.08)); /* Add subtle shadow */
+        outline: none; /* Remove default focus outline */
+    }
+
+    /* Style for Active Click (Optional but good UX) */
+    .compare-page-button:active {
+        /* Example: Use a very light blue or slightly darker white */
+        background-color: #f0f8ff; /* AliceBlue is a very light blue */
+        /* Or you could use var(--deped-light-blue) if it fits */
+        color: var(--deped-blue, #00308F); /* Keep text blue */
+        border-color: var(--deped-blue, #00308F); /* Keep border blue */
+        box-shadow: none; /* Remove shadow during the click */
+    }
+
+    /* --- Alternative Primary Button Style (If needed) --- */
+
+    .compare-page-button.primary {
+        background-color: var(--deped-blue, #00308F);
+        color: var(--deped-white, #FFFFFF);
+        border-color: var(--deped-blue, #00308F);
+    }
+
+    .compare-page-button.primary:hover,
+    .compare-page-button.primary:focus {
+        background-color: #002060; /* Needs a darker blue variable or hardcode */
+        border-color: #002060;
+        color: var(--deped-white, #FFFFFF);
+        box-shadow: var(--box-shadow-sm, 0 2px 5px rgba(0, 0, 0, 0.08));
+    }
+
+    .compare-page-button.primary:active {
+        background-color: #001030; /* Needs an even darker blue variable or hardcode */
+        border-color: #001030;
+        box-shadow: none;
+    }
+    */
+</style>
+
 <div class="geographic-view-content">
 <iframe frameborder="0" id="reportFrame" src="/dashreport/" style="width:100%; height:3000px;"></iframe>
 </div>
@@ -794,6 +863,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
+
 <footer>
 <div>
 <h4><i class="fas fa-university" style="margin-right: 10px;"></i> Department of Education</h4>
