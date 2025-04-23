@@ -1,0 +1,546 @@
+{% extends "page_temp.html" %}
+
+{% block title %}Data Management{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --deped-blue: #00308F;
+        --deped-yellow: #FFDA63;
+        --deped-light-blue: #ADD8E6;
+        --deped-white: #FFFFFF;
+        --deped-gray: #D3D3D3;
+        --text-dark: #333;
+        --text-light: #777;
+        --box-shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.08);
+        --box-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+        --transition-default: all 0.3s ease-in-out;
+        --border-radius-md: 10px;
+        --border-radius-sm: 5px;
+    }
+
+    body {
+        font-family: 'Open Sans', sans-serif;
+        background-color: var(--deped-white);
+        color: var(--text-dark);
+        line-height: 1.6;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: var(--deped-blue);
+    }
+
+    .dataset-year-container {
+        margin-bottom: 3rem;
+    }
+
+    .year-label {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: var(--deped-blue);
+        margin-bottom: 1rem;
+    }
+
+    .kpi-card {
+        padding: 1.5rem;
+        background: var(--deped-white);
+        border-radius: var(--border-radius-md);
+        box-shadow: var(--box-shadow-sm);
+        transition: var(--transition-default);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--box-shadow-md);
+    }
+
+    .kpi-card h3 {
+        font-size: 1.1rem;
+        color: var(--text-dark);
+    }
+
+    .visualization-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.2rem;
+    }
+
+    .dataset-item {
+        background: white;
+        padding: 1rem;
+        border-radius: var(--border-radius-sm);
+        box-shadow: var(--box-shadow-sm);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+        width: auto;
+        min-width: 460px;
+        text-align: center;
+    }
+
+    .toggle-btn {
+        padding: 0.4em 1em;
+        border-radius: 30px;
+        background-color: var(--deped-gray);
+        color: var(--text-dark);
+        cursor: pointer;
+        border: none;
+        transition: var(--transition-default);
+    }
+
+    .toggle-btn.active {
+        background-color: #27ae60;
+        color: white;
+    }
+
+    .button-container {
+        display: flex;
+        gap: 8px; /* Slightly reduced gap */
+        flex-wrap: wrap; /* Allows buttons to wrap on smaller screens */
+        justify-content: center; /* Keep buttons centered */
+        flex-direction: row;
+        margin-top: 0.5rem; /* Add a little space above the buttons */
+    }
+
+    .action-btn {
+        padding: 0.5em 1em; /* Slightly reduced padding */
+        background-color: var(--deped-blue);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        transition: var(--transition-default);
+        white-space: nowrap;
+        font-size: 0.9rem; /* Slightly smaller font size */
+        box-shadow: var(--box-shadow-sm); /* Add a subtle shadow */
+    }
+
+    .action-btn:hover {
+        background-color: #001f5c;
+        transform: translateY(-1px); /* Subtle lift on hover */
+        box-shadow: var(--box-shadow-md); /* Slightly stronger shadow on hover */
+    }
+
+    .action-btn.danger {
+        background-color: #e74c3c;
+    }
+
+    .action-btn.danger:hover {
+        background-color: #c0392b;
+    }
+
+    /* Prevent background scroll when modal is open */
+    body.modal-open {
+        overflow: hidden;
+    }
+
+    /* Modal backdrop */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        overflow: auto; /* allows scroll when modal content is tall */
+    }
+
+    /* Show when active */
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    /* Modal box content scroll fix */
+    .modal-content {
+        background-color: var(--deped-white);
+        border-radius: var(--border-radius-md);
+        padding: 2rem;
+        width: 90%;
+        max-width: 900px;
+        max-height: 90vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    /* Preview table scroll */
+    .modal-table-container {
+        max-height: 60vh;
+        overflow-y: auto;
+        overflow-x: auto;
+        margin-top: 1rem;
+        border: 1px solid #ccc;
+    }
+
+    /* Optional table styling */
+    #previewTable {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px; /* allow horizontal scroll if columns are many */
+    }
+
+    #previewTable th,
+    #previewTable td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-light);
+    }
+
+    .back-button-wrapper {
+        margin-top: 3rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    .back-button {
+        display: inline-block;
+        padding: 10px 18px;
+        background-color: var(--deped-white);
+        color: var(--deped-blue);
+        border: 2px solid var(--deped-blue);
+        border-radius: var(--border-radius-sm);
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition-default);
+    }
+
+    .back-button:hover {
+        background-color: var(--deped-blue);
+        color: var(--deped-white);
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1050; /* Higher than other content */
+    }
+
+    .modal-content {
+        background-color: var(--deped-white);
+        border-radius: var(--border-radius-md);
+        box-shadow: var(--box-shadow-md);
+        width: auto;
+        max-width: 500px;
+        margin: 1.5rem;
+        position: relative; /* For close button positioning */
+    }
+
+    .modal-header {
+        background-color: var(--deped-light-blue);
+        color: var(--deped-blue);
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--deped-gray);
+        border-top-left-radius: var(--border-radius-md);
+        border-top-right-radius: var(--border-radius-md);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-title {
+        font-weight: bold;
+        font-size: 1.25rem;
+        color: var(--deped-blue);
+    }
+
+    .modal-close-btn {
+        color: var(--text-light);
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
+    .modal-close-btn:hover {
+        color: var(--text-dark);
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+        color: var(--text-dark);
+    }
+
+    .modal-body p {
+        margin-bottom: 1rem;
+    }
+
+    .modal-footer {
+        padding: 1rem 1.5rem;
+        background-color: var(--deped-gray);
+        border-top: 1px solid var(--deped-light-blue);
+        border-bottom-left-radius: var(--border-radius-md);
+        border-bottom-right-radius: var(--border-radius-md);
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .modal-action-btn {
+        border: none;
+        padding: 0.75rem 1.25rem;
+        border-radius: var(--border-radius-sm);
+        color: var(--deped-white);
+        cursor: pointer;
+        transition: var(--transition-default);
+        box-shadow: var(--box-shadow-sm);
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .modal-cancel-btn {
+        background-color: var(--deped-gray);
+        color: var(--text-dark);
+    }
+
+    .modal-cancel-btn:hover {
+        background-color: #c0c0c0;
+    }
+
+    .modal-confirm-btn {
+        background-color: var(--deped-blue);
+    }
+
+    .modal-confirm-btn:hover {
+        background-color: #001f5c;
+    }
+
+    /* Style for the Replace Modal */
+    #replaceModal .modal-content {
+        max-width: 400px; /* Adjust as needed */
+    }
+
+    #replaceModal label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--deped-blue);
+        font-weight: bold;
+    }
+
+    #replaceModal input[type="file"] {
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+        border: 1px solid var(--deped-gray);
+        border-radius: var(--border-radius-sm);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #replaceModal button {
+        padding: 0.75rem 1.25rem;
+        border: none;
+        border-radius: var(--border-radius-sm);
+        color: var(--deped-white);
+        background-color: var(--deped-blue);
+        cursor: pointer;
+        transition: var(--transition-default);
+        font-weight: bold;
+    }
+
+    #replaceModal button:hover {
+        background-color: #001f5c;
+    }
+
+    /* Style for the Delete Modal */
+    #deleteModal .modal-content {
+        text-align: center;
+        max-width: 350px; /* Adjust as needed */
+    }
+
+    #deleteModal .modal-footer {
+        justify-content: center;
+    }
+
+    #deleteModal .action-btn.danger {
+        margin-top: 1rem;
+    }
+</style>
+
+<main>
+    <section>
+        <h2><i class="fas fa-database"></i> Dataset Management</h2>
+        <p>Below are your datasets for each school year. You can set one as active, preview, replace, download, or remove them.</p>
+
+        {% for year in range(2016, 2024) %}
+        <div class="dataset-year-container">
+            <div class="year-label">School Year {{ year }}-{{ year + 1 }}</div>
+
+            <div class="kpi-card{% if year == active_year %} active{% endif %}">
+                <h3>Dataset for {{ year }}-{{ year + 1 }}</h3>
+
+                {% if datasets %}
+                <div class="visualization-container">
+                    {% for dataset in datasets %}
+                        {% if dataset.filename.startswith(year|string) %}
+                        <div class="dataset-item{% if dataset.active %} active{% endif %}">
+                            <span>{{ dataset.filename }}</span>
+
+                            <div class="button-container">
+                                <button class="action-btn" onclick="openPreviewModal('{{ dataset.filename }}')">Preview</button>
+                                <button class="action-btn" onclick="openReplaceModal('{{ dataset.filename }}')">Replace</button>
+
+                                <form action="/download" method="POST" style="display:inline;">
+                                    <input type="hidden" name="filename" value="{{ dataset.filename }}">
+                                    <button class="action-btn" type="submit">Download</button>
+                                </form>
+
+                                <button class="action-btn danger" onclick="confirmDelete('{{ dataset.filename }}')">Remove</button>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% else %}
+                    <div class="loading-spinner"></div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+    <div class="back-button-wrapper">
+        <a href="/upload" class="back-button">← Back to Admin</a>
+    </div>
+</main>
+
+<div id="previewModal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('previewModal')">&times;</span>
+        <h3>Preview Dataset</h3>
+        <div class="modal-table-container">
+            <div id="previewContent"></div>
+        </div>
+    </div>
+</div>
+
+<div id="replaceModal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('replaceModal')">&times;</span>
+        <h2>Replace Dataset</h2>
+        <div class="modal-body">
+            <p class="warning-text"><i class="fas fa-exclamation-triangle text-warning mr-2"></i> <strong>Warning:</strong> This action will replace the current dataset and cannot be undone.</p>
+            <p>Please ensure you have cleaned the new dataset first on the admin page before proceeding with the replacement.</p>
+        </div>
+        <form id="replaceForm" method="POST" enctype="multipart/form-data">
+            <input type="hidden" id="replaceFilename" name="filename">
+            <label for="new_file">Select New Cleaned Dataset</label>
+            <input type="file" name="new_file" id="new_file" required>
+            <div class="modal-footer">
+                <button type="button" class="modal-cancel-btn" onclick="closeModal('replaceModal')">Cancel</button>
+                <button type="button" class="modal-confirm-btn" onclick="submitReplaceForm()">Replace</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="deleteModal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('deleteModal')">&times;</span>
+        <h3>Are you sure you want to delete this dataset?</h3>
+        <p>This action cannot be undone.</p>
+        <form action="/delete" method="POST">
+            <input type="hidden" name="filename" id="deleteFilename">
+            <button type="submit" class="action-btn danger">Yes, Delete</button>
+        </form>
+    </div>
+</div>
+<script>
+// Open Preview Modal
+function openPreviewModal(filename) {
+    fetch('/preview', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'filename=' + encodeURIComponent(filename)
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('previewContent').innerHTML = data.html;
+        document.getElementById('previewModal').style.display = 'flex'; // Show modal
+    });
+}
+
+// Open Replace Modal
+function openReplaceModal(filename) {
+    document.getElementById("replaceFilename").value = filename;
+    document.getElementById("replaceModal").style.display = "flex"; // Show modal
+}
+
+// Close Replace Modal
+function closeReplaceModal() {
+    document.getElementById("replaceModal").style.display = "none"; // Hide modal
+}
+
+// Submit the Replace Form
+function submitReplaceForm() {
+    const formData = new FormData(document.getElementById("replaceForm"));
+    
+    fetch("/replace", {
+        method: 'POST',
+        body: formData
+    }).then(response => {
+        if (!response.ok) {
+            alert("Failed to replace dataset.");
+        } else {
+            // Close the modal on success
+            closeReplaceModal();
+            location.reload(); // Reload the page to reflect changes
+        }
+    }).catch(error => {
+        console.error('Error:', error);
+        alert('Failed to replace dataset.');
+    });
+}
+
+
+// Confirm Delete Modal
+function confirmDelete(filename) {
+    document.getElementById("deleteFilename").value = filename;
+    document.getElementById("deleteModal").style.display = "flex"; // Show modal
+}
+
+// Close modal function
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none'; // Hide modal
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TANAW: Dashboard</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Candu&amp;family=Montserrat:wght@400;600;700;800&amp;family=Open+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" referrerpolicy="no-referrer" rel="stylesheet"/>
+    <style>
+            /* DepEd Solid Color Palette */
+            :root {
+                --deped-blue: #00308F; /* Deep Blue */
+                --deped-yellow: #FFDA63; /* Golden Yellow */
+                --deped-light-blue: #ADD8E6; /* Light Blue */
+                --deped-white: #FFFFFF;
+                --deped-gray: #D3D3D3;
+                --text-dark: #333;
+                --text-light: #777;
+                --box-shadow-sm: 0 4px 8px rgba(0, 0, 0, 0.08);
+                --box-shadow-md: 0 8px 16px rgba(0, 0, 0, 0.1);
+                --transition-default: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                --border-radius-md: 12px;
+                --border-radius-sm: 6px;
+                --accent-color: #FFA000; /* Example accent color */
+                --red-color: #DC3545;
+                --black-color: #000000;
+                --secondary-blue: #4361EE;
+                --gradient-blue: linear-gradient(135deg, var(--deped-blue) 0%, var(--secondary-blue) 100%);
+                --gradient-yellow: linear-gradient(135deg, var(--deped-yellow) 0%, #FFEA88 100%);
+                --gradient-light-blue: linear-gradient(135deg, #cce5ff 0%, #99ccff 50%, #66b2ff 100%);
+                    --success-color: #28a745; /* Green */
+                --warning-color: #ffc107; /* Yellow */
+                --danger-color: #dc3545; /* Red */
+                --info-color: #17a2b8; /* Cyan */
+
+            }
+
+            /* DepEd Fonts */
+            body {
+                font-family: 'Open Sans', sans-serif;
+                background: linear-gradient(135deg, var(--deped-white) 0%, #E0F2F7 100%); /* Light gradient background */
+                color: var(--text-dark);
+                line-height: 1.7;
+                padding: 30px;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                overflow-x: hidden;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                animation: fadeIn 0.6s ease-out;
+            }
+
+            h1, h2, h3, h4 {
+                font-family: 'Montserrat', sans-serif;
+                color: var(--deped-blue);
+                margin-bottom: 0.6em;
+                letter-spacing: -0.7px;
+                font-weight: 700;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.08);
+            }
+
+            h1 {
+                font-size: 3rem;
+                animation: fadeInDown 0.9s ease-out;
+                margin-bottom: 0.1em;
+                color: var(--deped-white);
+            }
+
+            h2 {
+                font-size: 2.4rem;
+                color: var(--deped-blue);
+                margin-bottom: 1em;
+                text-align: center;
+            }
+
+            h3 {
+                font-size: 1.0rem;
+                color: var(--deped-blue);
+                margin-bottom: 0.8em;
+                border-bottom: 2.8px solid var(--deped-yellow);
+            }
+
+            h4 {
+                font-size: 1.3rem;
+                color: var(--secondary-blue);
+                margin-top: 0;
+                margin-bottom: 1em;
+            }
+
+            /* Solid Header Section with Gradient */
+            header {
+                background: var(--gradient-blue);
+                color: var(--deped-blue);
+                padding: 20px;
+                border-radius: var(--border-radius-md);
+                margin-bottom: 35px;
+                box-shadow: var(--box-shadow-md);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                position: relative;
+                overflow: hidden;
+                z-index: 100;
+                border-bottom: 4px solid var(--deped-yellow);
+            }
+
+            header::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background-color: rgba(255, 218, 99, 0.15);
+                border-radius: 50%;
+                transform: translate(-10%, -10%) rotate(-30deg);
+                z-index: -1;
+                animation: pulse 2s infinite alternate;
+            }
+
+            @keyframes pulse {
+                0% { opacity: 0.8; transform: translate(-10%, -10%) rotate(-30deg) scale(1); }
+                100% { opacity: 1; transform: translate(-10%, -10%) rotate(-30deg) scale(1.05); }
+            }
+
+            header .logo-area {
+                display: flex;
+                align-items: center;
+            }
+
+            header .logo-area img {
+                height: 100px;
+                vertical-align: middle;
+                margin-right: 20px;
+                animation: fadeIn 1.1s ease-out, slideInLeft 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            header .logo-area h1 {
+                font-size: 1.4rem;
+                font-weight: 800;
+                margin: 0;
+                line-height: 1.2;
+                animation: fadeIn 1.1s ease-out, slideInRight 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            /* Navigation and Account Dropdown Container */
+            .header-right {
+                display: flex;
+                align-items: center;
+            }
+
+            /* Stylish Navigation Bar with Hover Effect */
+            nav {
+                background-color: rgba(255, 255, 255, 0.1);
+                border-radius: var(--border-radius-md);
+                padding: 0;
+                margin: 0;
+                animation: none;
+                transform: none;
+                opacity: 1;
+                margin-right: 15px;
+            }
+
+            nav ul {
+                list-style: none;
+                padding: 10px 15px;
+                margin: 0;
+                display: flex;
+                gap: 15px;
+            }
+
+            nav ul li a {
+                display: inline-flex;
+                padding: 10px 20px;
+                text-decoration: none;
+                color: var(--deped-white);
+                background-color: transparent;
+                border: 2px solid var(--deped-yellow);
+                border-radius: var(--border-radius-sm);
+                font-size: 1rem;
+                font-weight: 700;
+                transition: var(--transition-default);
+                align-items: center;
+                white-space: nowrap;
+                box-shadow: var(--box-shadow-sm);
+            }
+
+            nav ul li a:hover {
+                background-color: var(--deped-yellow);
+                color: var(--deped-blue);
+                border-color: var(--accent-color);
+                transform: translateY(-3px);
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.25);
+            }
+
+            nav ul li a:focus {
+                outline: none;
+                box-shadow: 0 0 0 4px rgba(173, 216, 230, 0.7);
+            }
+
+            nav ul li a i {
+                margin-right: 10px;
+                font-size: 1.1rem;
+            }
+
+            /* Hamburger Menu (No changes) */
+            .hamburger-menu {
+                display: none;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 35px;
+                height: 35px;
+                cursor: pointer;
+                gap: 6px;
+                z-index: 103;
+            }
+
+            .hamburger-menu .bar {
+                width: 28px;
+                height: 4px;
+                background-color: var(--deped-white);
+                border-radius: 5px;
+                transition: var(--transition-default);
+            }
+
+            /* Mobile Nav Overlay and Mobile Nav (No changes for brevity, keep the previous styles) */
+            .mobile-nav-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.6);
+                z-index: 101;
+                backdrop-filter: blur(5px);
+            }
+
+            .mobile-nav {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: var(--gradient-blue);
+                width: 350px;
+                border-radius: var(--border-radius-md);
+                box-shadow: var(--box-shadow-md);
+                z-index: 102;
+                margin-top: 0;
+                animation: slideInDown 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            .mobile-nav.open {
+                display: block;
+            }
+
+            .mobile-nav .close-btn {
+                position: absolute;
+                top: 15px;
+                right: 20px;
+                color: var(--deped-yellow);
+                font-size: 1.6rem;
+                cursor: pointer;
+                border: none;
+                background: none;
+                transition: var(--transition-default);
+            }
+
+            .mobile-nav .close-btn:hover {
+                color: var(--accent-color);
+            }
+
+            .mobile-nav ul {
+                list-style: none;
+                padding: 30px;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
+            }
+
+            .mobile-nav ul li a {
+                display: block;
+                text-decoration: none;
+                color: var(--deped-yellow);
+                padding: 15px 25px;
+                border-radius: var(--border-radius-sm);
+                transition: var(--transition-default);
+                text-align: center;
+                width: 100%;
+                font-size: 1.1rem;
+                border: 2px solid var(--deped-yellow);
+            }
+
+            .mobile-nav ul li a:hover {
+                background-color: rgba(255, 218, 99, 0.2);
+                color: var(--deped-blue);
+                border-color: var(--accent-color);
+            }
+
+            /* Account Pop-up (Slightly enhanced) */
+            .account-popup {
+                display: none;
+                position: absolute;
+                top: 60px;
+                right: 20px;
+                background-color: var(--deped-white);
+                border: 1px solid var(--deped-gray);
+                border-radius: var(--border-radius-sm);
+                box-shadow: var(--box-shadow-md);
+                padding: 20px;
+                z-index: 101;
+                width: 180px;
+                text-align: center;
+                animation: fadeInUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            .account-popup h4 {
+                color: var(--text-dark);
+                font-size: 1.2rem;
+                margin-top: 0;
+                margin-bottom: 12px;
+            }
+
+            .account-popup button {
+                display: block;
+                width: 100%;
+                padding: 10px 15px;
+                margin-bottom: 10px;
+                border: none;
+                border-radius: var(--border-radius-sm);
+                background-color: var(--deped-light-blue);
+                color: var(--deped-blue);
+                font-size: 1rem;
+                cursor: pointer;
+                transition: var(--transition-default);
+                box-shadow: var(--box-shadow-sm);
+            }
+
+            .account-popup button:last-child {
+                    margin-bottom: 0; /* Remove margin for the last button */
+            }
+
+
+            .account-popup button:hover {
+                background-color: var(--secondary-blue);
+                color: var(--deped-white);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Solid KPIs Section */
+            #kpis {
+                display: grid;
+                grid-template-columns: repeat(6, 1fr);
+                gap: 15px;
+                margin-bottom: 5px;
+                z-index: 1;
+            }
+
+            .kpi-card {
+                background-color: var(--deped-white);
+                padding: 10px;
+                border-radius: var(--border-radius-md);
+                box-shadow: var(--box-shadow-sm);
+                text-align: center;
+                transition: var(--transition-default);
+                border-left: 3px solid var(--deped-yellow);
+                animation: fadeInUp 0.6s ease-out var(--animation-delay) forwards;
+                opacity: 0;
+                transform: translateY(15px);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+
+            /* Dynamic animation delay for KPIs */
+            .kpi-card:nth-child(1) { --animation-delay: 0.5s; }
+            .kpi-card:nth-child(2) { --animation-delay: 0.6s; }
+            .kpi-card:nth-child(3) { --animation-delay: 0.7s; }
+            .kpi-card:nth-child(4) { --animation-delay: 0.8s; }
+            .kpi-card:nth-child(5) { --animation-delay: 0.9s; }
+            .kpi-card:nth-child(6) { --animation-delay: 1.0s; }
+            .kpi-card:nth-child(7) { --animation-delay: 1.1s; }
+            .kpi-card:nth-child(8) { --animation-delay: 1.2s; }
+            .kpi-card:nth-child(9) { --animation-delay: 1.3s; }
+            .kpi-card:nth-child(10) { --animation-delay: 1.4s; }
+            .kpi-card:nth-child(11) { --animation-delay: 1.5s; }
+            .kpi-card:nth-child(12) { --animation-delay: 1.6s; }
+            .kpi-card:nth-child(13) { --animation-delay: 1.7s; }
+            .kpi-card:nth-child(13) { --animation-delay: 1.8s; }
+
+            .kpi-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .kpi-card h3 {
+                font-size: 1.0rem;
+                margin-bottom: 0.4em;
+                margin: 0px 0px;
+            }
+
+            .kpi-card .loading-spinner {
+                border: 3px solid rgba(0, 0, 0, 0.1);
+                border-top: 3px solid var(--deped-blue);
+                border-radius: 50%;
+                width: 28px;
+                height: 28px;
+                margin: 8px auto;
+                animation: spin 1s linear infinite;
+            }
+
+            .kpi-card .data-value {
+                margin: 0px 0px;
+                font-size: 1.4rem;
+                font-weight: 600;
+            }
+
+            .kpi-card .visualization-container {
+                width: 80%;
+                max-width: 200px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 15px;
+                padding: 8px 0px;
+            }
+
+            /* Chart Section Below KPIs */
+            .kpi-charts {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 15px;
+                width: 100%;
+                box-sizing: border-box;
+                margin-bottom: 15px;
+            }
+
+            .chart-container {
+                width: 100%;
+                max-width: 100%;
+                height: 400px;
+                min-height: 300px;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+
+            .legend-container {
+                display: flex;
+                flex-direction: column; /* Stacks legends vertically */
+                align-items: flex-start;
+                justify-content: flex-start;
+                width: 30%; /* Makes the legend container take up less space */
+                padding: 10px;
+                height: 100%;
+                overflow-y: auto; /* Allows scrolling if legend items overflow */
+            }
+
+            .legend-container ul {
+                list-style-type: none;
+                padding-left: 0;
+            }
+
+            .legend-container li {
+                display: flex;
+                align-items: center;
+                margin-bottom: 5px;
+            }
+
+            .legend-container .legend-color {
+                width: 12px;
+                height: 12px;
+                margin-right: 8px;
+            }
+            
+            canvas {
+                width: 100% !important;
+                height: 100% !important;
+                max-width: 100%;
+                max-height: 100%;
+            }
+
+            .single-value-visual {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .single-value-visual i {
+                font-size: 1.5em;
+                color: var(--deped-blue);
+            }
+
+            /* Solid Highlights Section */
+            #highlights {
+                background-color: var(--deped-yellow);
+                color: var(--deped-blue);
+                padding: 10px;
+                text-align: center;
+                border-radius: var(--border-radius-md);
+                box-shadow: var(--box-shadow-sm);
+                margin-bottom: 15px;
+                font-weight: bold;
+                font-size: 0.95rem;
+                animation: pulse 1.5s infinite alternate;
+                z-index: 1;
+            }
+
+            #highlights i {
+                margin-right: 6px;
+            }
+
+            /* Animations */
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+            @keyframes fadeInDown {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            @keyframes slideInDown {
+                from { transform: translateY(-15px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                100% { transform: scale(1.03); }
+            }
+
+            /* Responsive Design */
+            footer {
+                background: var(--gradient-blue);
+                color: var(--deped-light-blue);
+                padding: 40px 20px;
+                border-radius: var(--border-radius-md);
+                margin-top: 40px;
+                box-shadow: var(--box-shadow-md);
+                /* animation: slideInUp 1s ease-out; *//* Removed animation for hover effect conflict */
+                    transition: var(--transition-default); /* Added transition for hover */
+            }
+
+            /* Removed slideInUp keyframes as animation is removed from footer */
+            /* @keyframes slideInUp {
+                from { transform: translateY(20px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            } */
+
+
+            footer div {
+                max-width: 1200px;
+                margin: 0 auto;
+                text-align: center;
+            }
+
+            footer h4 {
+                font-size: 1.6rem;
+                font-weight: 800;
+                margin-bottom: 15px;
+                color: var(--deped-yellow);
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            }
+
+            footer p {
+                font-size: 1.1rem;
+                margin-bottom: 20px;
+                color: var(--deped-white);
+                opacity: 0.9;
+            }
+
+            footer hr {
+                border: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
+                margin: 25px auto;
+                width: 80%;
+            }
+
+            footer a {
+                text-decoration: none;
+                color: var(--deped-light-blue);
+                transition: color 0.3s ease-in-out;
+                font-size: 1rem;
+                margin: 0 15px;
+            }
+
+            footer a:hover {
+                color: var(--deped-yellow);
+            }
+
+            footer p#copyright {
+                font-size: 0.9rem;
+                margin-top: 25px;
+                opacity: 0.7;
+            }
+
+            @media (max-width: 768px) {
+                body {
+                    padding: 15px; /* Reduced padding */
+                }
+
+                header {
+                    padding: 15px;
+                    margin-bottom: 20px; /* Reduced margin */
+                }
+
+                header .logo-area img {
+                    height: 80px; /* Smaller logo */
+                    margin-right: 10px;
+                }
+
+                header .logo-area h1 {
+                    font-size: 0.9rem; /* Smaller title */
+                }
+
+                nav {
+                    display: none;
+                    margin-right: 0;
+                }
+
+                .header-right {
+                    justify-content: flex-end;
+                    width: auto;
+                }
+
+                .hamburger-menu {
+                    display: flex;
+                    width: 30px;
+                    height: 30px;
+                    gap: 5px;
+                }
+
+                .hamburger-menu .bar {
+                    width: 24px;
+                    height: 3px;
+                }
+
+                .account-popup {
+                    top: 55px; /* Adjusted position */
+                    right: 10px;
+                    width: 150px; /* Smaller popup */
+                    padding: 10px; /* Reduced padding */
+                }
+
+                .account-popup h4 {
+                    font-size: 1rem; /* Smaller text */
+                    margin-bottom: 8px;
+                }
+
+                .account-popup button {
+                    font-size: 0.8rem; /* Smaller button text */
+                    padding: 6px 10px;
+                    margin-bottom: 6px;
+                }
+
+                #reportFrame {
+                    height: 1200px; /* Adjust map height for smaller screens */
+                }
+
+                #geographic-view-section {
+                    padding: 10px;
+                }
+
+                .geographic-view-header h3 {
+                    font-size: 1.4rem;
+                }
+
+                .geographic-view-content {
+                    padding: 15px;
+                }
+
+                footer {
+                    padding: 25px 10px; /* Reduced footer padding */
+                    margin-top: 30px;
+                }
+
+                footer h4 {
+                    font-size: 1.2rem; /* Smaller footer heading */
+                        margin-bottom: 10px;
+                }
+
+                footer p {
+                    font-size: 0.9rem; /* Smaller footer text */
+                        margin-bottom: 15px;
+                }
+                    footer hr {
+                        margin: 20px auto;
+                    }
+
+                footer a {
+                    font-size: 0.8rem; 
+                    margin: 0 8px;
+                }
+
+                footer p#copyright {
+                    font-size: 0.8rem; 
+                    margin-top: 20px;
+                }
+
+            }
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+
+            @keyframes fadeInDown {
+                    from { opacity: 0; transform: translateY(-20px); } /* Increased initial translation */
+                    to { opacity: 1; transform: translateY(0); }
+                }
+
+                @keyframes fadeInUp {
+                    from { opacity: 0; transform: translateY(20px); } /* Added fadeInUp */
+                    to { opacity: 1; transform: translateY(0); }
+                }
+
+
+            @keyframes slideInLeft {
+                    from { transform: translateX(-20px); opacity: 0; } /* Increased initial translation */
+                    to { transform: translateX(0); opacity: 1; }
+                }
+
+            @keyframes slideInRight {
+                    from { transform: translateX(20px); opacity: 0; } /* Increased initial translation */
+                    to { opacity: 1; transform: translateX(0); opacity: 1; }
+                }
+
+            nav ul li a i {
+                margin-right: 5px; /* Adjusted icon margin */
+            }
+
+            /* Animations */
+            @keyframes fadeInDown {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+
+    </style>
+</head>
+<body>
+    <header>
+    <div class="logo-area">
+    <img alt="DepEd Logo" src="/static/logo (1).png"/>
+    <h1>TRACKING &amp; ANALYTICS FOR NATIONWIDE ACADEMIC WATCH</h1>
+    </div>
+    <div class="header-right">
+    <nav>
+    <ul>
+    <li><a href="/home"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+    <li><a href="/report"><i class="fas fa-file-alt"></i> Reports</a></li>
+    <li><a href="#" id="accountBtn"><i class="fas fa-user-circle"></i></a></li>
+    </ul>
+    </nav>
+    <div class="hamburger-menu" id="hamburger">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    </div>
+    </div>
+    <div class="mobile-nav-overlay" id="navOverlay"></div>
+    <div class="mobile-nav" id="mobileNav">
+    <button class="close-btn" id="closeNav"><i class="fas fa-times"></i></button>
+    <ul>
+    <li><a href="/upload"><i class="fas fa-cogs"></i> Admin</a></li>
+    <li><a href="/help"><i class="fas fa-question-circle"></i> Help</a></li>
+    <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+    </div>
+    </header>
+    <div class="account-popup" id="accountPopup">
+    <h4>Account</h4>
+    <button onclick="window.location.href='/upload'"><i class="fas fa-cogs"></i> Admin</button>
+    <button onclick="window.location.href='/help'"><i class="fas fa-question-circle"></i> Help</button>
+    <button onclick="window.location.href='/logout'"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <section id="kpis"> <!-- KPIs (Summary Metrics) -->
+        <div id="totalEnrollments" class="kpi-card"> <!--KPI Total Enrollments -->
+            <div class="visualization-container">
+                <i class="fas fa-users" style="font-size: 2.0em; color: var(--deped-blue);"></i>
+                <div>
+                    <div class="loading-spinner"></div>
+                        <p class="data-value"></p>
+                    <h3>Total Enrolled</h3>   
+                </div>
+            </div>
+        </div> 
+        
+        <div id="numberOfSchools" class="kpi-card"> <!--KPI Number of Schools -->
+            <div class="visualization-container">
+                <i class="fas fa-school" style="font-size: 2.0em; color: var(--deped-blue);"></i>
+                <div>
+                    <div class="loading-spinner"></div>
+                        <p class="data-value">
+                            <span id="schoolsValue"></span>
+                        </p>
+                        <h3>Schools</h3>
+                    </div>    
+                </div>
+            </div>
+        </div>
+
+        <div id="numberOfYearLevels" class="kpi-card"> <!--KPI Number of Year Levels -->
+            <div class="visualization-container">
+                <i class="fas fa-layer-group" style="font-size: 2.0em; color: var(--deped-blue)"></i>
+                <div>
+                    <div class="loading-spinner"></div>
+                        <p class="data-value">
+                            <span id="yearLevelsValue"></span>
+                        </p>
+                        <h3>Year Levels</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="numberOfRegions" class="kpi-card"> <!--KPI Number of Regions -->
+            <div class="visualization-container">
+                <i class="fas fa-map-marker-alt" style="font-size: 2.0em; color: var(--deped-blue);"></i>
+                <div>
+                    <div class="loading-spinner"></div>
+                     <p class="data-value">
+                        <span id="regionsValue"></span>
+                    </p>
+                    <h3>Regions</h3>               
+                </div>
+            </div>
+        </div>
+
+        <div id="numberOfDivisions" class="kpi-card"> <!-- Total Divisions -->
+            <div class="visualization-container">
+                <i class="fas fa-sitemap" style="font-size: 2.0em; color: var(--deped-blue);"></i>
+                <div>
+                    <div class="loading-spinner"></div>
+                    <p class="data-value">
+                        <span id="divisionsValue"></span>
+                    </p>
+                    <h3>Divisions</h3>               
+                </div>
+            </div>
+        </div>
+
+        <div id="numberOfMunicipalities" class="kpi-card"> <!-- Total Municipalities -->
+            <div class="visualization-container">
+                <i class="fas fa-city" style="font-size: 2.0em; color: var(--deped-blue);"></i>
+                <div>
+                    <div class="loading-spinner"></div>
+                    <p class="data-value">
+                        <span id="municipalitiesValue"></span>
+                    </p>
+                    <h3>Municipalities</h3>               
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="kpi-charts"> <!-- Visual Data Charts (Separate Layout) -->
+        <div id="genderEnrollmentChartCard" class="kpi-card"> <!--KPI Gender Enrollment Bar -->
+            <h3><i class="fas fa-venus-mars"></i> Enrollment by Gender</h3>
+            <!-- <div class="loading-spinner"></div> -->
+            <div class="chart-container" style="height: 400px; width: 200px">
+                <canvas id="genderEnrollmentChart"></canvas>
+            </div>
+            <p class="data-value"></p>
+        </div>
+
+        <div id="enrollmentByRegionCard" class="kpi-card"> <!-- Enrolment by Region -->
+            <h3><i class="fas fa-chart-area"></i> Enrollment by Region</h3>
+            <div class="chart-container">
+                <canvas id="regionChart" style="height: 600px;"></canvas>
+            </div>
+            <p class="data-value"></p>
+        </div>  
+
+        <div id="enrollmentByYearLevelCard" class="kpi-card"> 
+            <h3><i class="fas fa-chart-bar"></i> Enrollment by Year Level</h3>
+            <div class="chart-container">
+                <canvas id="yearLevelRadarChart"></canvas>
+            </div>
+            <p class="data-value"></p>
+        </div>
+    </section>
+    <section class="kpi-charts"> 
+        <div id="genderRatioByRegionCard" class="kpi-card"> 
+            <h3><i class="fas fa-venus-mars"></i> Gender Distribution by Region</h3>
+            <div class="chart-container">
+                <canvas id="genderRatioChart" width="500"></canvas>
+            </div>
+        </div>
+
+        <div id="avgEnrollmentPerRegionCard" class="kpi-card"> 
+            <h3><i class="fas fa-chart-bar"></i> Average Enrollment Per Region</h3>
+            <div class="chart-container">
+                <canvas id="avgEnrollmentPerRegionChart" height="500"></canvas>
+            </div>
+            <p class="data-value"></p>
+        </div> 
+        
+    </section>
+    <section class="kpi-charts">
+
+        <div id="topSchoolsCard" class="kpi-card"> 
+            <h3><i class="fas fa-school"></i> Top 5 Most Populated Schools</h3>
+            <div class="chart-container">
+                <canvas id="topSchoolsChart"></canvas>
+            </div>
+            <p class="data-value"></p>
+        </div>
+
+        <div id="strandHeatmapCard" class="kpi-card">
+            <h3><i class="fas fa-th"></i> SHS Strand Distribution by Region</h3>
+            <div class="chart-container">
+                <canvas id="strandHeatmap"></canvas>
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <h3><i class="fas fa-stream"></i> Senior High Strand Enrollment</h3>
+            <div class="chart-container">
+                <canvas id="shsStrandChart" height="500" width="500"></canvas>
+            </div>
+        </div>        
+    </section>
+    <section class="kpi-charts"> 
+        <div id="sectorEnrollmentCard" class="kpi-card" > 
+            <h3><i class="fas fa-building"></i> Enrollment by Sector</h3>
+            <div class="chart-container" >
+                <canvas id="sectorChart"></canvas>
+            </div>
+            <p class="data-value"></p>
+        </div>
+
+
+    </section>
+
+    <section id="highlights">
+        <i class="fas fa-bullhorn"></i> Enrollment for SY 2025-2026 is open!
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        window.onload = function() {
+            fetchEnrollmentData();
+        };
+
+        async function fetchEnrollmentData() {
+            try {
+                const response = await fetch('/api/enrollment_data');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                updateKPIs(data);
+            } catch (error) {
+                console.error("Error fetching enrollment data:", error);
+                // Optionally display an error message on the dashboard
+                const kpisSection = document.getElementById('kpis');
+                kpisSection.querySelectorAll('.kpi-card').forEach(card => {
+                    card.innerHTML = `<h3>Error</h3><p class="error-message">No data available. Please upload a file in Admin to visualize it.</p>`;
+                });
+            }
+        }
+
+        function updateKPIs(data) {
+            const kpisSection = document.getElementById('kpis');
+            kpisSection.querySelectorAll('.loading-spinner').forEach(spinner => spinner.style.display = 'none');
+
+            // Total Enrollments KPI
+            const totalEnrollmentsDiv = document.getElementById('totalEnrollments');
+            const totalEnrollmentsValue = totalEnrollmentsDiv.querySelector('.data-value');
+            if (data.totalEnrollments) {
+                animateCountUp(totalEnrollmentsValue, data.totalEnrollments);
+            } else {
+                totalEnrollmentsValue.textContent = 'N/A';
+            }
+
+            // Number of Schools
+            const numberOfSchoolsDiv = document.getElementById('numberOfSchools');
+            const numberOfSchoolsValue = numberOfSchoolsDiv.querySelector('.data-value');
+            if (data.numberOfSchools) {
+                animateCountUp(numberOfSchoolsValue, data.numberOfSchools);
+            } else {
+                numberOfSchoolsValue.textContent = 'N/A';
+            }
+
+            // Number of Year Levels
+            const numberOfYearLevelsDiv = document.getElementById('numberOfYearLevels');
+            const numberOfYearLevelsValue = numberOfYearLevelsDiv.querySelector('.data-value');
+            if (data.numberOfYearLevels) {
+                animateCountUp(numberOfYearLevelsValue, data.numberOfYearLevels);
+            } else {
+                numberOfYearLevelsValue.textContent = 'N/A';
+            }
+
+            // Number of Regions
+            const numberOfRegionsDiv = document.getElementById('numberOfRegions');
+            const numberOfRegionsValue = numberOfRegionsDiv.querySelector('.data-value');
+            if (data.regionsWithSchools) {
+                animateCountUp(numberOfRegionsValue, data.regionsWithSchools);
+            } else {
+                numberOfRegionsValue.textContent = 'N/A';
+            }
+
+            // Number of Divisions
+            const numberOfDivisionsSpan = document.getElementById("divisionsValue");
+            if (data.numberOfDivisions) {
+                animateCountUp(numberOfDivisionsSpan, data.numberOfDivisions);
+            } else {
+                numberOfDivisionsSpan.textContent = 'N/A';
+            }
+
+            // Number of Municipalities
+            const numberOfMunicipalitiesSpan = document.getElementById("municipalitiesValue");
+            if (data.numberOfMunicipalities) {
+                animateCountUp(numberOfMunicipalitiesSpan, data.numberOfMunicipalities);
+            } else {
+                numberOfMunicipalitiesSpan.textContent = 'N/A';
+            }
+
+            // === Total Enrollments Bar Chart (Comparing Male and Female) ===
+            const genderEnrollment = document.getElementById('genderEnrollmentChart')?.getContext('2d');
+            if (genderEnrollment) {
+                new Chart(genderEnrollment, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Male', 'Female'],
+                        datasets: [{
+                            label: 'Enrollment Count',
+                            data: [data.maleEnrollments || 0, data.femaleEnrollments || 0],
+                            backgroundColor: ['#4fa3d1', '#f79bb0'], // Enhanced colors: shades of blue and pink
+                            borderColor: ['#1e8eb0', '#f06292'], // Darker borders for emphasis
+                            borderWidth: 2,
+                            borderRadius: 8, // Softer edges for a more modern look
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'x', 
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Gender',
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    }
+                                },
+                                ticks: {
+                                    font: {size: 12,},
+                                    color: '#333' // Ensures label readability
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Enrollment Count',
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    }
+                                },
+                                ticks: {
+                                    font: {size: 12,},
+                                    color: '#333'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false},
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleFont: { size: 14 },
+                                bodyFont: { size: 12 },
+                                callbacks: {
+                                    title: (tooltipItems) => `Gender: ${tooltipItems[0].label}`,
+                                    label: (tooltipItem) => `Count: ${tooltipItem.raw.toLocaleString()}` // Adds commas to large numbers for readability
+                                }
+                            }
+                        },
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    }
+                });
+            } 
+            
+            // === Enrollment by Region Chart (Vertical Bar) ===
+            fetch('/api/enrollment_data')
+                .then(response => response.json())
+                .then(data => {
+                    const regionData = data.enrollmentByRegion || {};
+                    const entries = Object.entries(regionData); // No sorting, keeps original order
+
+                    const regionLabels = entries.map(entry => entry[0]);
+                    const regionCounts = entries.map(entry => entry[1]);
+
+                    const ctx = document.getElementById('regionChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: regionLabels,
+                            datasets: [{
+                                label: 'Enrollment Count',
+                                data: regionCounts,
+                                backgroundColor: 'rgba(30, 108, 217, 0.7)', // Soft DepEd blue
+                                borderColor: 'rgba(30, 108, 217, 1)', // Solid blue border
+                                borderWidth: 2,
+                                hoverBackgroundColor: 'rgba(30, 108, 217, 1)',
+                                hoverBorderColor: 'rgba(30, 108, 217, 1)',
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {display: false},
+                                tooltip: {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                    titleFont: {size: 14},
+                                    bodyFont: {size: 12},
+                                    callbacks: {
+                                        label: function (context) {
+                                            return `Enrolled: ${context.parsed.x.toLocaleString()} students`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Number of Enrolled Learners',
+                                        font: {
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    ticks: {
+                                        callback: value => value.toLocaleString(),
+                                        font: {size: 12},
+                                        color: '#333',
+                                        beginAtZero: true
+                                    }
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Regions',
+                                        font: {
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    ticks: {
+                                        font: {size: 12},
+                                        color: '#333',
+                                        autoSkip: false,
+                                        maxRotation: 0,
+                                        minRotation: 0
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+
+            // === Enrollment per Year Level (Radar Chart) ===
+            const yearLevelRadarCanvas = document.getElementById('yearLevelRadarChart');
+
+            if (data.enrollmentByYearLevel && yearLevelRadarCanvas) {
+                const orderedGrades = [
+                    'Kindergarten', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5',
+                    'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10',
+                    'Grade 11', 'Grade 12'
+                ];
+
+                const yearLevelData = data.enrollmentByYearLevel;
+                const yearLevels = orderedGrades.filter(grade => yearLevelData.hasOwnProperty(grade));
+                const yearCounts = yearLevels.map(grade => yearLevelData[grade]);
+
+                new Chart(yearLevelRadarCanvas.getContext('2d'), {
+                    type: 'radar',
+                    data: {
+                        labels: yearLevels,
+                        datasets: [{
+                            label: 'Enrollment per Year Level',
+                            data: yearCounts,
+                            fill: true,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)', // Light Blue Gradient
+                            borderColor: '#36A2EB', // Solid Blue Border
+                            borderWidth: 2,
+                            pointBackgroundColor: '#36A2EB',
+                            pointRadius: 5,
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                angleLines: {
+                                    display: true, // Keep angle lines for better directionality
+                                    color: '#ddd' // Lighter angle lines
+                                },
+                                suggestedMin: 0,
+                                suggestedMax: Math.max(...yearCounts) + 50000, // Dynamic max
+                                ticks: {
+                                    stepSize: 50000, // Adjust tick steps for better distribution
+                                    maxTicksLimit: 6, // Less concentric lines for clarity
+                                    backdropColor: 'transparent',
+                                    color: '#444', // Darker ticks for better visibility
+                                    display: true
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {display: false},
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleFont: { size: 14 },
+                                bodyFont: { size: 12 },
+                                callbacks: {
+                                    label: (context) => {
+                                        return `Enrolled: ${context.raw.toLocaleString()} students`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // === Gender Distribution by Region ===
+            if (data.genderRatioByRegion) {
+                const regionData = data.genderRatioByRegion;
+
+                // Convert Roman numerals to integers for sorting
+                const romanToInt = (roman) => {
+                    const romanMap = {
+                        I: 1, II: 2, III: 3, IV: 4, V: 5, VI: 6, VII: 7,
+                        VIII: 8, IX: 9, X: 10, XI: 11, XII: 12, XIII: 13,
+                        XIV: 14, XV: 15, XVI: 16, XVII: 17, XVIII: 18, XIX: 19, XX: 20
+                    };
+                    return romanMap[roman] || 0;
+                };
+
+                const sortedRegions = Object.keys(regionData).sort((a, b) => {
+                    const romanA = a.replace('Region ', '').trim();
+                    const romanB = b.replace('Region ', '').trim();
+                    return romanToInt(romanA) - romanToInt(romanB);
+                });
+
+                const maleData = sortedRegions.map(region => regionData[region]);
+                const femaleData = sortedRegions.map(region => 100 - regionData[region]);
+
+                new Chart(document.getElementById('genderRatioChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: sortedRegions,
+                        datasets: [
+                            {
+                                label: '% Male',
+                                data: maleData.map(val => -val), // Male values are negative for left alignment
+                                backgroundColor: '#4A90E2', // Stronger Blue
+                                borderColor: '#1C6A92',
+                                borderWidth: 1
+                            },
+                            {
+                                label: '% Female',
+                                data: femaleData,
+                                backgroundColor: '#FF69B4', // Stronger Pink
+                                borderColor: '#F06292',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                stacked: true,
+                                ticks: {
+                                    callback: (value) => `${Math.abs(value)}%`,
+                                    beginAtZero: true,
+                                    color: '#444'
+                                },
+                                title: {
+                                        display: true,
+                                        text: 'Percentage of Enrollment',
+                                        font: {
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
+                                    },
+                                grid: {
+                                    color: '#ccc',
+                                    drawTicks: false
+                                }
+                            },
+                            y: {
+                                stacked: true,
+                                ticks: {color: '#333'},
+                                title: {
+                                        display: true,
+                                        text: 'Regions',
+                                        font: {
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
+                                    }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleFont: { size: 14 },
+                                bodyFont: { size: 12 },
+                                callbacks: {
+                                    label: (context) => {
+                                        const gender = context.dataset.label;
+                                        const value = Math.abs(context.raw);
+                                        return `${gender}: ${value.toFixed(1)}% students`;
+                                    }
+                                }
+                            },
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    color: '#333',
+                                    boxWidth: 14
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // === Top 5 Most Populated Schools (No ChartDataLabels) ===
+            const topSchoolsCanvas = document.getElementById('topSchoolsChart');
+
+            if (data.topSchools && topSchoolsCanvas) {
+                // Sort the schools by enrollment descending
+                const sortedEntries = Object.entries(data.topSchools).sort((a, b) => b[1] - a[1]);
+                const schoolNames = sortedEntries.map(entry => entry[0]);
+                const enrollments = sortedEntries.map(entry => entry[1]);
+
+                new Chart(topSchoolsCanvas.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: schoolNames,
+                        datasets: [{
+                            label: 'Enrollment',
+                            data: enrollments,
+                            backgroundColor: [
+                                '#FF7043',
+                                '#FFB74D',
+                                '#4DB6AC',
+                                '#64B5F6',
+                                '#BA68C8'
+                            ],
+                            borderRadius: 8,
+                            borderColor: ['#E64A19', '#FFA000', '#00897B','#1976D2','#7B1FA2'], // Darker borders for emphasis
+                            borderWidth: 2,
+                            borderSkipped: false
+
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y', // Horizontal bars
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: {
+                                        display: true,
+                                        text: 'Numbers of Students',
+                                        font: {
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
+                                    },
+                                ticks: {callback: value => value.toLocaleString()}
+                            },
+                            y: {
+                                ticks: {
+                                    font: {size: 8},
+                                    padding: 6,
+                                    color: '#333'
+                                },
+                                title: {
+                                        display: true,
+                                        text: 'Schools',
+                                        font: {
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
+                                    }
+                            }
+                        },
+                        plugins: {
+                            legend: {display: false},
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleFont: { size: 14 },
+                                bodyFont: { size: 12 },
+                                callbacks: {
+                                    label: context => `Enrolled: ${context.formattedValue} students`
+                                }
+                            },
+                        },
+                        animation: {
+                            duration: 800,
+                            easing: 'easeOutQuart'
+                        }
+                    }
+                });
+            }
+
+            if (data.strandRegionMatrix) {
+                const matrix = data.strandRegionMatrix;
+                const regions = matrix['Region'];
+                const strands = Object.keys(matrix).filter(k => k !== 'Region');
+
+                const colorPalette = [
+                    '#4e79a7', '#f28e2c', '#e15759', '#76b7b2',
+                    '#59a14f', '#edc949', '#af7aa1', '#ff9da7'
+                ];
+
+                const datasets = strands.map((strand, i) => ({
+                    label: strand,
+                    data: matrix[strand],
+                    backgroundColor: colorPalette[i % colorPalette.length],
+                    stack: 'StrandStack'
+                }));
+
+                const ctx = document.getElementById('strandHeatmap').getContext('2d');
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: regions,
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'x',
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => `${ctx.dataset.label}: ${ctx.raw.toLocaleString()}`
+                                }
+                            },
+                            title: {
+                                display: false
+                            },
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    color: '#333',
+                                    font: { size: 12 }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                stacked: true,
+                                title: {
+                                    display: true,
+                                    text: 'Region',
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                ticks: {
+                                    font: { size: 11 },
+                                    color: '#333'
+                                }
+                            },
+                            y: {
+                                stacked: true,
+                                title: {
+                                    display: true,
+                                    text: 'Enrollment Count',
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                ticks: {
+                                    beginAtZero: true,
+                                    font: { size: 11 },
+                                    color: '#333'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            // === Average Enrollment per Region ===
+            if (data.averageEnrollmentPerRegion) {
+                const regionData = data.averageEnrollmentPerRegion;
+
+                // Function to convert Roman numeral to integer
+                const romanToInt = (roman) => {
+                    const romanMap = {
+                        I: 1, IV: 4, V: 5, IX: 9, X: 10, 
+                        XL: 40, L: 50, XC: 90, C: 100
+                    };
+                    let i = 0, num = 0;
+                    while (i < roman.length) {
+                        const twoChar = roman[i] + (roman[i + 1] || '');
+                        if (romanMap[twoChar]) {
+                            num += romanMap[twoChar];
+                            i += 2;
+                        } else {
+                            num += romanMap[roman[i]];
+                            i += 1;
+                        }
+                    }
+                    return num;
+                };
+
+                // Extract and sort regions by their Roman numeral value
+                const sortedRegions = Object.keys(regionData).sort((a, b) => {
+                    const romanA = a.replace('Region ', '').trim();
+                    const romanB = b.replace('Region ', '').trim();
+                    return romanToInt(romanA) - romanToInt(romanB);
+                });
+
+                const sortedValues = sortedRegions.map(region => regionData[region]);
+
+                new Chart(document.getElementById('avgEnrollmentPerRegionChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: sortedRegions,
+                        datasets: [{
+                            label: 'Average Enrollment',
+                            data: sortedValues,
+                            backgroundColor: '#4CAF50', // Fresh Green
+                            borderColor: '#388E3C', // Darker Green Border
+                            borderWidth: 2,
+                            borderRadius: 8 // Smooth edges for modern look
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleFont: { size: 14 },
+                                bodyFont: { size: 12 },
+                                callbacks: {
+                                    title: (tooltipItems) => `${tooltipItems[0].label}`,
+                                    label: (tooltipItem) => `Average Enrolled: ${tooltipItem.raw.toLocaleString()} students`
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Region',
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#333'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Enrollment Count',
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#333',
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // === Senior High Strand Enrollment ===
+            if (data.shsEnrollmentByStrand) {
+                const ctx = document.getElementById('shsStrandChart').getContext('2d');
+                const strands = Object.keys(data.shsEnrollmentByStrand);
+                const counts = Object.values(data.shsEnrollmentByStrand);
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: strands,
+                        datasets: [{
+                            label: 'Enrollment',
+                            data: counts,
+                            backgroundColor: '#FF6347', // A brighter red for better contrast
+                            borderColor: '#FF4500', // Darker red border
+                            borderWidth: 2, // Border width for definition
+                            borderRadius: 8, // Rounded corners for smoother design
+                            hoverBackgroundColor: '#FF4500', // Darker color on hover
+                            hoverBorderColor: '#FF6347' // Lighter border color on hover
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleFont: { size: 14 },
+                                bodyFont: { size: 12 },
+                                callbacks: {
+                                    title: (tooltipItems) => `Strand: ${tooltipItems[0].label}`,
+                                    label: (tooltipItem) => `Enrolled: ${tooltipItem.raw.toLocaleString()} students`
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Enrollment Count',
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#333',
+                                    beginAtZero: true
+                                },
+                                grid: {
+                                    color: '#ccc',
+                                    drawTicks: false
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Strand',
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#333'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // === Enrollment by Sector (Doughnut Chart) ===
+            fetch('/api/enrollment_data')
+                .then(response => response.json())
+                .then(data => {
+                    const sectorData = data.enrollmentBySector || {
+                        Public: 0,
+                        Private: 0,
+                        PSO: 0
+                    };
+
+                    const sectorLabels = Object.keys(sectorData);
+                    const sectorCounts = Object.values(sectorData);
+
+                    const ctx = document.getElementById('sectorChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: sectorLabels,
+                            datasets: [{
+                                data: sectorCounts,
+                                backgroundColor: [
+                                    '#2196F3', // Public - Blue
+                                    '#4CAF50', // Private - Green
+                                    '#FF9800'  // PSO - Orange
+                                ],
+                                borderColor: '#ffffff',
+                                borderWidth: 3,
+                                hoverOffset: 10
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        font: {
+                                            size: 12
+                                        },
+                                        color: '#333'
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                    titleFont: { size: 14 },
+                                    bodyFont: { size: 12 },
+                                    callbacks: {
+                                        title: context => {
+                                            const sector = context[0].label;
+                                            return `Sector: ${sector}`;
+                                        },
+                                        label: context => {
+                                            const value = context.parsed;
+                                            return `Enrolled: ${value.toLocaleString()} students`;
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+
+
+
+            // Add hover effect to KPI cards
+            kpisSection.querySelectorAll('.kpi-card').forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'scale(1.05)';
+                    card.style.boxShadow = '0 6px 12px rgba(0,0,0,0.15)';
+                    card.style.cursor = 'pointer';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'scale(1)';
+                    card.style.boxShadow = 'var(--box-shadow-sm)';
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.getElementById('hamburger');
+            const mobileNav = document.getElementById('mobileNav');
+            const navOverlay = document.getElementById('navOverlay');
+            const closeNav = document.getElementById('closeNav');
+            const accountBtn = document.getElementById('accountBtn');
+            const accountPopup = document.getElementById('accountPopup');
+
+            hamburger.addEventListener('click', function() {
+                mobileNav.classList.add('open');
+                navOverlay.style.display = 'block';
+            });
+
+            closeNav.addEventListener('click', function() {
+                mobileNav.classList.remove('open');
+                navOverlay.style.display = 'none';
+            });
+
+            navOverlay.addEventListener('click', function() {
+                mobileNav.classList.remove('open');
+                navOverlay.style.display = 'none';
+            });
+
+            accountBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                accountPopup.style.display = (accountPopup.style.display === 'block') ? 'none' : 'block';
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!accountBtn.contains(event.target) && !accountPopup.contains(event.target)) {
+                    accountPopup.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+<footer>
+    <div>
+    <h4><i class="fas fa-university" style="margin-right: 10px;"></i> Department of Education</h4>
+    <p>Empowering the Nation Through Quality Education.</p>
+    <hr/>
+    <div>
+    <a href="/home">Home</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/report">Reports</a>
+    <a href="/help">Help</a>
+    <a href="/upload">Admin</a>
+    </div>
+    <p id="copyright">© 2025 DepEd Enrollment Dashboard. All rights reserved.</p>
+    </div>
+    </footer>
+    <script>
+            // Function to get data from localStorage
+            function getLocalStorage(key) {
+                return localStorage.getItem(key);
+            }
+    
+            // Update copyright year
+            function updateCopyrightYear() {
+                const year = new Date().getFullYear();
+                document.getElementById('copyright').textContent = `© ${year} DepEd Enrollment Dashboard. All rights reserved.`;
+            }
+            updateCopyrightYear();
+    
+            // Footer hover effect (using JS for compatibility with animation)
+            const footer = document.querySelector('footer');
+            if (footer) {
+                footer.addEventListener('mouseover', () => {
+                    footer.style.background = 'var(--gradient-yellow)'; // Use gradient
+                    footer.style.color = 'var(--deped-blue)';
+                    footer.style.boxShadow = '0 8px 12px rgba(0, 0, 0, 0.3)';
+                    footer.style.transform = 'translateY(-3px)';
+                     // Update colors for children like h4, p, a if needed, or rely on general styles
+                     footer.querySelectorAll('h4').forEach(el => el.style.color = 'var(--deped-blue)');
+                     footer.querySelectorAll('p').forEach(el => el.style.color = 'var(--deped-blue)');
+                     footer.querySelectorAll('a').forEach(el => el.style.color = 'var(--deped-blue)');
+    
+    
+                });
+                footer.addEventListener('mouseout', () => {
+                    footer.style.background = 'var(--gradient-blue)'; // Use gradient
+                    footer.style.color = 'var(--deped-light-blue)';
+                    footer.style.boxShadow = 'var(--box-shadow-md)';
+                    footer.style.transform = 'translateY(0)';
+                     footer.querySelectorAll('h4').forEach(el => el.style.color = 'var(--deped-yellow)');
+                     footer.querySelectorAll('p').forEach(el => el.style.color = 'var(--deped-white)');
+                     footer.querySelectorAll('a').forEach(el => el.style.color = 'var(--deped-light-blue)');
+                });
+            }
+    </script>
+<script>
+        function animateCountUp(element, endValue, duration = 1200) {
+        let startValue = 0;
+        let startTime = null;
+
+        const step = (timestamp) => {
+            if (!startTime) startTime = timestamp;
+            const progress = timestamp - startTime;
+            const percentage = Math.min(progress / duration, 1);
+            const current = Math.floor(percentage * endValue);
+
+            element.textContent = current.toLocaleString();
+
+            if (percentage < 1) {
+                window.requestAnimationFrame(step);
+            } else {
+                element.textContent = endValue.toLocaleString(); // Final value
+            }
+        };
+
+        window.requestAnimationFrame(step);
+    }
+</script>    
+</body>
+</html>

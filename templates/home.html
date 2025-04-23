@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TANAW: Home</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Candu&amp;family=Montserrat:wght@400;600;700;800&amp;family=Open+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" referrerpolicy="no-referrer" rel="stylesheet"/>
+<style>
+        /* DepEd Solid Color Palette */
+        :root {
+            --deped-blue: #00308F; /* Deep Blue */
+            --deped-yellow: #FFDA63; /* Golden Yellow */
+            --deped-light-blue: #ADD8E6; /* Light Blue */
+            --deped-white: #FFFFFF;
+            --deped-gray: #D3D3D3;
+            --text-dark: #333;
+            --text-light: #777;
+            --box-shadow-sm: 0 4px 8px rgba(0, 0, 0, 0.08);
+            --box-shadow-md: 0 8px 16px rgba(0, 0, 0, 0.1);
+            --transition-default: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --border-radius-md: 12px;
+            --border-radius-sm: 6px;
+            --accent-color: #FFA000; /* Example accent color */
+            --red-color: #DC3545;
+            --black-color: #000000;
+            --secondary-blue: #4361EE;
+            --gradient-blue: linear-gradient(135deg, var(--deped-blue) 0%, var(--secondary-blue) 100%);
+            --gradient-yellow: linear-gradient(135deg, var(--deped-yellow) 0%, #FFEA88 100%);
+            --gradient-light-blue: linear-gradient(135deg, #cce5ff 0%, #99ccff 50%, #66b2ff 100%);
+             --success-color: #28a745; /* Green */
+            --warning-color: #ffc107; /* Yellow */
+            --danger-color: #dc3545; /* Red */
+            --info-color: #17a2b8; /* Cyan */
+
+        }
+
+        /* DepEd Fonts */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, var(--deped-white) 0%, #E0F2F7 100%); /* Light gradient background */
+            color: var(--text-dark);
+            line-height: 1.7;
+            padding: 30px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--deped-blue);
+            margin-bottom: 0.6em;
+            letter-spacing: -0.7px;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            font-size: 3rem;
+            animation: fadeInDown 0.9s ease-out;
+            margin-bottom: 0.1em;
+            color: var(--deped-white);
+        }
+
+        h2 {
+            font-size: 2.4rem;
+            color: var(--deped-blue);
+            margin-bottom: 1em;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--deped-blue);
+            margin-bottom: 0.8em;
+            border-bottom: 4px solid var(--deped-yellow);
+            padding-bottom: 0.5em;
+        }
+
+        h4 {
+            font-size: 1.3rem;
+            color: var(--secondary-blue);
+            margin-top: 0;
+            margin-bottom: 1em;
+        }
+
+        /* Solid Header Section with Gradient */
+        header {
+            background: var(--gradient-blue);
+            color: var(--deped-blue);
+            padding: 20px;
+            border-radius: var(--border-radius-md);
+            margin-bottom: 35px;
+            box-shadow: var(--box-shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            z-index: 100;
+            border-bottom: 4px solid var(--deped-yellow);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-color: rgba(255, 218, 99, 0.15);
+            border-radius: 50%;
+            transform: translate(-10%, -10%) rotate(-30deg);
+            z-index: -1;
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; transform: translate(-10%, -10%) rotate(-30deg) scale(1); }
+            100% { opacity: 1; transform: translate(-10%, -10%) rotate(-30deg) scale(1.05); }
+        }
+
+        header .logo-area {
+            display: flex;
+            align-items: center;
+        }
+
+        header .logo-area img {
+            height: 100px;
+            vertical-align: middle;
+            margin-right: 20px;
+            animation: fadeIn 1.1s ease-out, slideInLeft 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        header .logo-area h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1.2;
+            animation: fadeIn 1.1s ease-out, slideInRight 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Navigation and Account Dropdown Container */
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Stylish Navigation Bar with Hover Effect */
+        nav {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius-md);
+            padding: 0;
+            margin: 0;
+            animation: none;
+            transform: none;
+            opacity: 1;
+            margin-right: 15px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 10px 15px;
+            margin: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        nav ul li a {
+            display: inline-flex;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: var(--deped-white);
+            background-color: transparent;
+            border: 2px solid var(--deped-yellow);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            font-weight: 700;
+            transition: var(--transition-default);
+            align-items: center;
+            white-space: nowrap;
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        nav ul li a:hover {
+            background-color: var(--deped-yellow);
+            color: var(--deped-blue);
+            border-color: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        nav ul li a:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(173, 216, 230, 0.7);
+        }
+
+        nav ul li a i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Hamburger Menu (No changes) */
+        .hamburger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            gap: 6px;
+            z-index: 103;
+        }
+
+        .hamburger-menu .bar {
+            width: 28px;
+            height: 4px;
+            background-color: var(--deped-white);
+            border-radius: 5px;
+            transition: var(--transition-default);
+        }
+
+        /* Mobile Nav Overlay and Mobile Nav (No changes for brevity, keep the previous styles) */
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 101;
+            backdrop-filter: blur(5px);
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--gradient-blue);
+            width: 350px;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--box-shadow-md);
+            z-index: 102;
+            margin-top: 0;
+            animation: slideInDown 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .mobile-nav.open {
+            display: block;
+        }
+
+        .mobile-nav .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: var(--deped-yellow);
+            font-size: 1.6rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: var(--transition-default);
+        }
+
+        .mobile-nav .close-btn:hover {
+            color: var(--accent-color);
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            padding: 30px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .mobile-nav ul li a {
+            display: block;
+            text-decoration: none;
+            color: var(--deped-yellow);
+            padding: 15px 25px;
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition-default);
+            text-align: center;
+            width: 100%;
+            font-size: 1.1rem;
+            border: 2px solid var(--deped-yellow);
+        }
+
+        .mobile-nav ul li a:hover {
+            background-color: rgba(255, 218, 99, 0.2);
+            color: var(--deped-blue);
+            border-color: var(--accent-color);
+        }
+
+        /* Account Pop-up (Slightly enhanced) */
+        .account-popup {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: var(--deped-white);
+            border: 1px solid var(--deped-gray);
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--box-shadow-md);
+            padding: 20px;
+            z-index: 101;
+            width: 180px;
+            text-align: center;
+            animation: fadeInUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .account-popup h4 {
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .account-popup button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            background-color: var(--deped-light-blue);
+            color: var(--deped-blue);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition-default);
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        .account-popup button:last-child {
+             margin-bottom: 0; /* Remove margin for the last button */
+        }
+
+
+        .account-popup button:hover {
+            background-color: var(--secondary-blue);
+            color: var(--deped-white);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Welcome Section with More Emphasis */
+        #welcome-section {
+            background: var(--gradient-light-blue);
+            color: var(--deped-blue);
+            padding: 50px 30px;
+            border-radius: var(--border-radius-md);
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow-md);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border-top: 5px solid var(--deped-blue);
+            border-bottom: 5px solid var(--deped-blue);
+        }
+
+        #welcome-section::before,
+        #welcome-section::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-color: rgba(0, 48, 143, 0.1);
+            border-radius: 50%;
+        }
+
+        #welcome-section::before {
+            top: 10px;
+            left: 10px;
+            animation: bubble 8s infinite alternate;
+        }
+
+        #welcome-section::after {
+            bottom: 10px;
+            right: 10px;
+            animation: bubble 10s infinite alternate;
+        }
+
+        @keyframes bubble {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+            100% { transform: translate(50px, 50px) scale(1.2); opacity: 0.2; }
+        }
+
+        #welcome-section h2 {
+            color: var(--deped-blue);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 2.6rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            animation: pulseTitle 1.5s infinite alternate;
+        }
+
+        @keyframes pulseTitle {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.02); } /* Slightly reduced pulse */
+        }
+
+        #welcome-section p {
+            font-size: 1.1rem;
+            max-width: 900px;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.05);
+        }
+
+        .welcome-icons {
+            position: absolute;
+            font-size: 2.5rem;
+            color: rgba(0, 48, 143, 0.18);
+            animation: float 6s ease-in-out infinite;
+        }
+
+         @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .welcome-icons.top-left {
+            top: 20px;
+            left: 20px;
+        }
+
+        .welcome-icons.bottom-right {
+            bottom: 20px;
+            right: 20px;
+            opacity: 0.7;
+            animation-delay: 1.5s;
+        }
+
+        /* Dashboard Main Container (New Wrapper) */
+        #dashboard-main {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        /* Dashboard Upper Section (Profile & System Status - Keep as 2 columns) */
+        #dashboard-upper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+         /* Dashboard Widgets Grid (New 3-Column Layout) */
+        #dashboard-widgets-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr; /* Three equal columns */
+            gap: 25px;
+        }
+
+        /* Styling for the new columns */
+        .widget-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* Space between widgets in a column */
+        }
+
+
+        .dashboard-widget {
+            background-color: var(--deped-white);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--box-shadow-md);
+            padding: 25px;
+            /* border-left: 6px solid var(--deped-white); *//* Removed default border left */
+            transition: var(--transition-default);
+            transform: translateY(0);
+             flex-grow: 1; /* Allow widgets in columns to grow */
+             box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+         .dashboard-widget#realtime-clock-widget { border-left: 6px solid var(--deped-white); }
+         .dashboard-widget#weather-widget { border-left: 6px solid var(--deped-white); }
+         .dashboard-widget#calendar-widget {
+    box-shadow: 0 0 15px rgba(0, 48, 143, 0.3), 0 0 25px rgba(0, 48, 143, 0.15); border-left: 6px solid var(--deped-white); }
+         .dashboard-widget#quick-links { border-left: 6px solid var(--deped-white); }
+         .dashboard-widget#announcements { border-left: 6px solid var(--deped-white); }
+
+
+        .dashboard-widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .dashboard-widget h4 {
+            color: var(--deped-blue);
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border-bottom: 2px solid var(--deped-light-blue);
+            padding-bottom: 0.6em;
+        }
+
+        /* Specific styles for enhanced Profile and System Status */
+        #user-profile, #system-status {
+             border-left: 6px solid var(--deped-white); /* Add specific border left */
+        }
+
+        #user-profile h4 i, #system-status h4 i {
+            color: var(--deped-blue);
+        }
+
+         #user-profile .profile-info-item,
+         #system-status .system-info-item {
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-size: 0.9rem; /* Slightly larger font for details */
+            display: flex; /* Use flex to align icon and text */
+            align-items: center;
+            gap: 10px; /* Space between icon and text */
+            padding-bottom: 4px;
+            border-bottom: 1px dashed rgba(0, 48, 143, 0.1); /* Subtle separator */
+         }
+
+        #user-profile .profile-info-item:last-child,
+        #system-status .system-info-item:last-child {
+            border-bottom: none; /* No border after the last item */
+            margin-bottom: 0;
+             padding-bottom: 0;
+        }
+
+         #user-profile .profile-info-item i,
+         #system-status .system-info-item i {
+             color: var(--secondary-blue); /* Icon color */
+             font-size: 1.1rem; /* Slightly larger icons */
+             width: 20px; /* Fixed width for icons for alignment */
+             text-align: center;
+         }
+
+        #user-profile .profile-info-item strong {
+            min-width: 100px; /* Align labels */
+            display: inline-block;
+            color: var(--deped-blue); /* Label color */
+            font-weight: 600;
+        }
+
+         #system-status .system-info-item strong {
+             min-width: 120px; /* Align labels */
+             display: inline-block;
+             color: var(--deped-blue); /* Label color */
+             font-weight: 600;
+         }
+
+
+        #user-profile button {
+             margin-top: 15px;
+             width: auto; /* Allow button to size content */
+             padding: 10px 15px;
+             display: inline-block; /* Display buttons inline */
+             margin-right: 10px; /* Space between buttons */
+        }
+
+         #user-profile button:last-child {
+             margin-right: 0;
+         }
+
+         #system-status .status-indicator-dot {
+             display: inline-block;
+             width: 10px;
+             height: 10px;
+             border-radius: 50%;
+             margin-right: 5px;
+             vertical-align: middle; /* Align with text */
+         }
+
+         /* Stylish Realtime Clock */
+        #realtime-clock-widget {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--deped-white); /* Changed to white */
+            color: var(--deped-blue);
+            /*border-left-color: var(--deped-white); *//* Handled by specific widget border above */
+            /* flex: 1; *//* Removed flex-grow from here */
+            border-radius: var(--border-radius-md);
+        }
+
+        #realtime-clock {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem; /* Increased size */
+            text-align: center;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+            animation: glow 1s infinite alternate;
+            font-weight: 800;
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2); color: var(--deped-blue);}
+            100% { text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); color: var(--secondary-blue);}
+        }
+
+        #realtime-date {
+            font-size: 1rem; /* Increased size */
+            text-align: center;
+            opacity: 0.9;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        /* Enhanced Calendar Widget */
+        #calendar-widget {
+    box-shadow: 0 0 15px rgba(0, 48, 143, 0.3), 0 0 25px rgba(0, 48, 143, 0.15);
+            text-align: center;
+            /* flex: 1; *//* Removed flex-grow from here */
+            border-radius: var(--border-radius-md);
+             background-color: var(--deped-white); /* Changed to white */
+             color: var(--deped-blue);
+             padding-top: 25px; /* Add padding back */
+        }
+
+        #calendar-widget h4 {
+            margin-bottom: 15px; /* Increased margin */
+            border-bottom: none;
+             color: var(--deped-blue);
+        }
+
+        #calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+            width: 100%; /* Make calendar responsive */
+            max-width: 280px; /* Max width for larger screens */
+            margin: 0 auto;
+            border: 1px solid var(--deped-gray);
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+        }
+
+        .calendar-day {
+            padding: 6px;
+            text-align: center;
+            background-color: var(--deped-white);
+            color: var(--text-dark);
+            border-radius: 0;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            font-size: 0.8rem; /* Slightly larger font */
+             user-select: none; /* Prevent text selection */
+             cursor: pointer;
+        }
+
+        .calendar-day.header {
+            font-weight: bold;
+            color: var(--deped-white); /* Header text white */
+            background-color: var(--deped-blue); /* Header background blue */
+        }
+
+        .calendar-day.current-day {
+            background-color: var(--deped-yellow); /* Highlight current day with yellow */
+            color: var(--deped-blue); /* Current day text blue */
+            font-weight: bold;
+             position: relative;
+             overflow: hidden;
+             animation: pulseDay 1.5s infinite alternate;
+        }
+
+         @keyframes pulseDay {
+             0% { transform: scale(1); opacity: 1;}
+             100% { transform: scale(1.05); opacity: 0.9; }
+         }
+
+        .calendar-day:hover:not(.header) {
+            background-color: var(--deped-light-blue);
+             transform: scale(1.05);
+        }
+
+         .calendar-day:active:not(.header) {
+             transform: scale(0.95);
+         }
+
+
+        /* Quick Links Widget with Icons and Hover */
+        #quick-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #quick-links ul li {
+            margin-bottom: 10px; /* Increased space */
+            position: relative;
+        }
+
+         #quick-links ul li:last-child {
+             margin-bottom: 0;
+         }
+
+        #quick-links ul li a {
+            display: flex; /* Use flex for alignment */
+            align-items: center;
+            padding: 12px 15px; /* Increased padding */
+            text-decoration: none;
+            color: var(--deped-blue);
+            background-color: var(--deped-light-blue);
+            border-radius: var(--border-radius-sm);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            box-shadow: var(--box-shadow-sm);
+            font-size: 0.9rem; /* Slightly larger font */
+             font-weight: 600;
+        }
+
+        #quick-links ul li a i {
+            margin-right: 12px; /* Increased space */
+            font-size: 1.2rem; /* Larger icons */
+             color: var(--deped-blue); /* Default icon color */
+        }
+
+        #quick-links ul li a:hover {
+            transform: translateX(5px); /* Slide slightly on hover */
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+            background-color: var(--secondary-blue);
+            color: var(--deped-white);
+        }
+
+         #quick-links ul li a:hover i {
+             color: var(--deped-yellow); /* Change icon color on hover */
+         }
+
+
+        /* Announcements Widget with Subtle Styling */
+        #announcements ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        #announcements ul li {
+            margin-bottom: 10px; /* Increased space */
+            color: var(--text-dark);
+            padding-left: 25px; /* Increased padding */
+            position: relative;
+            font-size: 0.9rem; /* Slightly larger font */
+            line-height: 1.5;
+            transition: color 0.2s ease-in-out;
+        }
+         #announcements ul li:last-child {
+             margin-bottom: 0;
+         }
+
+
+        #announcements ul li::before {
+            content: "\f0a1"; /* Bullet point icon (bell) */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 3px; /* Adjust vertical alignment */
+            color: var(--deped-blue);
+            font-size: 0.9rem; /* Match list item font size */
+             transition: transform 0.2s ease-in-out;
+        }
+         #announcements ul li:hover::before {
+             transform: scale(1.2); /* Slight hover effect on bullet */
+             color: var(--accent-color);
+         }
+
+         #announcements ul li span {
+             font-size: 0.8rem; /* Smaller font for status labels */
+             font-weight: 600;
+             margin-left: 8px; /* Increased space */
+         }
+        #announcements ul li:hover {
+            color: var(--deped-blue); /* Change text color on hover */
+            cursor: pointer;
+        }
+
+
+        /* Additional Dashboard Stuff - Refined Styling (used for Profile/System Status) */
+         /* .other-widget - Replaced by specific styles for #user-profile and #system-status */
+
+
+        #user-profile button,
+        #help-support button { /* help-support button doesn't exist in HTML, but keeping selector */
+            background: var(--gradient-blue);
+            color: var(--deped-white);
+            border: none;
+            padding: 10px 15px; /* Adjusted padding */
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            font-size: 0.9rem; /* Slightly larger font */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        #user-profile button:hover,
+        #help-support button:hover {
+            transform: scale(1.03); /* Slightly less aggressive scale */
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        #system-status p { /* Original style, will be overridden by system-info-item */
+            margin-bottom: 5px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+        }
+
+
+        #system-status .status-indicator { /* Original style, replaced by status-indicator-dot */
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+         #notifications ul { /* notifications widget not in HTML, but keeping styles */
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+         }
+
+         #notifications ul li {
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            padding-left: 25px;
+            position: relative;
+            font-size: 0.8rem;
+         }
+
+         #notifications ul li i {
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 0.7rem;
+         }
+
+         #notifications ul li span {
+            vertical-align: middle;
+            margin-left: 5px;
+            font-size: 0.7rem;
+         }
+
+
+        #weather-widget {
+            /* flex: 1; *//* Removed flex-grow */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--deped-white); /* Changed to white */
+            color: var(--deped-blue);
+            /* border-left-color: var(--deped-white); *//* Handled by specific widget border above */
+            border-radius: var(--border-radius-md);
+            font-size: 1rem; /* Increased font size */
+            padding: 25px; /* Add padding back */
+        }
+
+        #weather-widget p {
+            margin-bottom: 8px; /* Increased space */
+             font-size: 1rem;
+        }
+         #weather-widget p:last-of-type {
+              margin-bottom: 10px;
+         }
+
+
+        #weather-icon {
+            font-size: 2rem; /* Larger icon */
+            margin-top: 5px;
+            color: var(--accent-color); /* Icon color */
+        }
+
+        /* Article Section - More Visual Appeal */
+        #news-articles {
+            margin-top: 40px;
+            padding: 40px;
+            border-radius: var(--border-radius-md);
+            background-color: var(--deped-white);
+            box-shadow: var(--box-shadow-md);
+            border: none; /* Removed direct border */
+            position: relative;
+            overflow: hidden;
+        }
+
+        #news-articles::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-yellow); /* Yellow gradient top border */
+        }
+
+        #news-articles::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-blue); /* Blue gradient bottom border */
+        }
+
+        #news-articles h3 {
+            color: var(--secondary-blue);
+            border-bottom: 4px solid var(--accent-color);
+            padding-bottom: 0.7em;
+            margin-bottom: 1.2em;
+            text-align: left;
+            font-size: 2.2rem;
+        }
+
+        .article {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            padding: 30px;
+            border-radius: var(--border-radius-md);
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent white */
+            box-shadow: var(--box-shadow-sm);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.7s ease-out;
+            border-left: 5px solid var(--secondary-blue);
+        }
+
+        .article:nth-child(even) {
+            grid-template-columns: 1.5fr 1fr;
+            background-color: rgba(240, 248, 255, 0.8); /* Even lighter transparent color */
+            border-left: none;
+            border-right: 5px solid var(--accent-color);
+        }
+
+        .article:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .article-image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--box-shadow-sm);
+            aspect-ratio: 16 / 9;
+            cursor: pointer;
+            border: 1px solid var(--deped-gray);
+        }
+
+        .article-image {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease-out;
+        }
+
+        .article:hover .article-image {
+            transform: scale(1.05);
+        }
+
+        .article:nth-child(even) .article-image-container {
+            order: 1;
+        }
+
+        .article-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .article-headline {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--deped-blue);
+            margin-bottom: 15px;
+            text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.08);
+        }
+
+        .article-description {
+            font-size: 1.05rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            height: auto; /* Adjusted for better readability */
+            overflow: hidden;
+        }
+
+        .article-description::after {
+            display: none; /* Removed the fade-out effect for descriptions */
+        }
+
+        .read-more-btn {
+            background: var(--gradient-yellow);
+            color: var(--deped-blue);
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            box-shadow: var(--box-shadow-sm);
+            font-weight: 600;
+             align-self: flex-start; /* Align button to the start */
+        }
+
+        .read-more-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #FFEA88 0%, #F0C27B 100%); /* Slightly lighter yellow on hover */
+        }
+
+        .article-link {
+            color: var(--secondary-blue);
+            text-decoration: none;
+            margin-left: 10px;
+            font-size: 1.1rem;
+            transition: color 0.2s ease-in-out;
+            align-self: flex-start; /* Align link to the start */
+             margin-top: 10px; /* Add space above link */
+        }
+
+        .article-link:hover {
+            color: var(--deped-blue);
+        }
+
+        /* Footer with Subtle Animation */
+        footer {
+            background: var(--gradient-blue);
+            color: var(--deped-light-blue);
+            padding: 40px 20px;
+            border-radius: var(--border-radius-md);
+            margin-top: 40px;
+            box-shadow: var(--box-shadow-md);
+            /* animation: slideInUp 1s ease-out; *//* Removed animation for hover effect conflict */
+             transition: var(--transition-default); /* Added transition for hover */
+        }
+
+        /* Removed slideInUp keyframes as animation is removed from footer */
+        /* @keyframes slideInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        } */
+
+
+        footer div {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        footer h4 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--deped-yellow);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        footer p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--deped-white);
+            opacity: 0.9;
+        }
+
+        footer hr {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 25px auto;
+            width: 80%;
+        }
+
+        footer a {
+            text-decoration: none;
+            color: var(--deped-light-blue);
+            transition: color 0.3s ease-in-out;
+            font-size: 1rem;
+            margin: 0 15px;
+        }
+
+        footer a:hover {
+            color: var(--deped-yellow);
+        }
+
+        footer p#copyright {
+            font-size: 0.9rem;
+            margin-top: 25px;
+            opacity: 0.7;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) { /* Added breakpoint for tablets */
+             #dashboard-upper {
+                 grid-template-columns: 1fr; /* Stack profile and system status */
+                 gap: 20px;
+             }
+             #dashboard-widgets-grid {
+                 grid-template-columns: 1fr; /* Stack the three columns */
+             }
+             .widget-column {
+                 gap: 20px; /* Adjust gap when stacked */
+             }
+              .article {
+                 grid-template-columns: 1fr; /* Stack article image and details */
+                 gap: 20px;
+             }
+              .article:nth-child(even) {
+                 grid-template-columns: 1fr;
+             }
+              .article-image-container {
+                 order: 0 !important; /* Ensure image is always first */
+              }
+              .article-details {
+                 align-items: center; /* Center article details */
+                 text-align: center;
+              }
+              .article-headline {
+                  text-align: center;
+              }
+              .article-description {
+                  text-align: left; /* Keep description left-aligned */
+              }
+              .read-more-btn, .article-link {
+                  align-self: center; /* Center button and link when stacked */
+              }
+
+
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px; /* Reduced padding */
+            }
+
+            header {
+                padding: 15px;
+                margin-bottom: 20px; /* Reduced margin */
+            }
+
+            header .logo-area img {
+                height: 80px; /* Smaller logo */
+                margin-right: 10px;
+            }
+
+            header .logo-area h1 {
+                font-size: 0.9rem; /* Smaller title */
+            }
+
+            nav {
+                display: none;
+                margin-right: 0;
+            }
+
+            .header-right {
+                justify-content: flex-end;
+                width: auto;
+            }
+
+            .hamburger-menu {
+                display: flex;
+                width: 30px;
+                height: 30px;
+                gap: 5px;
+            }
+
+            .hamburger-menu .bar {
+                width: 24px;
+                height: 3px;
+            }
+
+            .account-popup {
+                top: 55px; /* Adjusted position */
+                right: 10px;
+                width: 150px; /* Smaller popup */
+                padding: 10px; /* Reduced padding */
+            }
+
+            .account-popup h4 {
+                font-size: 1rem; /* Smaller text */
+                margin-bottom: 8px;
+            }
+
+            .account-popup button {
+                font-size: 0.8rem; /* Smaller button text */
+                padding: 6px 10px;
+                margin-bottom: 6px;
+            }
+
+            #welcome-section {
+                padding: 30px 15px; /* Reduced padding */
+                margin-bottom: 20px;
+            }
+
+            #welcome-section h2 {
+                font-size: 1.8rem; /* Smaller heading */
+            }
+
+            #welcome-section p {
+                font-size: 0.9rem; /* Smaller text */
+            }
+
+            .welcome-icons {
+                font-size: 1.8rem; /* Smaller icons */
+            }
+            .welcome-icons.top-left { top: 10px; left: 10px; }
+            .welcome-icons.bottom-right { bottom: 10px; right: 10px; }
+
+
+            .dashboard-widget {
+                padding: 15px; /* Reduced widget padding */
+            }
+             .dashboard-widget h4 {
+                 font-size: 1.2rem; /* Smaller widget titles */
+                 margin-bottom: 10px;
+                 padding-bottom: 0.4em;
+             }
+
+             #user-profile .profile-info-item,
+             #system-status .system-info-item {
+                 font-size: 0.8rem; /* Smaller details text */
+                  gap: 8px;
+             }
+              #user-profile .profile-info-item i,
+             #system-status .system-info-item i {
+                 font-size: 1rem; /* Smaller icons */
+                 min-width: 16px; /* Adjust icon width */
+             }
+              #user-profile .profile-info-item strong,
+              #system-status .system-info-item strong {
+                  min-width: 80px; /* Adjust label width */
+              }
+              #user-profile button {
+                  font-size: 0.8rem;
+                  padding: 6px 10px;
+                  margin-top: 10px;
+              }
+
+
+             #realtime-clock {
+                 font-size: 2rem; /* Smaller clock */
+             }
+             #realtime-date {
+                 font-size: 0.9rem; /* Smaller date */
+             }
+
+             #calendar-widget h4 {
+                 font-size: 1.2rem; /* Smaller calendar title */
+                 margin-bottom: 10px;
+             }
+             .calendar-day {
+                 padding: 4px; /* Reduced padding */
+                 font-size: 0.7rem; /* Smaller day number */
+             }
+             #calendar {
+                  max-width: 240px; /* Further restrict max width */
+             }
+
+
+             #quick-links ul li a {
+                 padding: 10px 12px; /* Reduced quick link padding */
+                 font-size: 0.8rem; /* Smaller quick link text */
+             }
+              #quick-links ul li a i {
+                 margin-right: 8px; /* Reduced space */
+                 font-size: 1.1rem; /* Adjust quick link icon size */
+             }
+
+              #announcements ul li {
+                 padding-left: 20px; /* Reduced padding */
+                 font-size: 0.8rem; /* Smaller announcement text */
+              }
+             #announcements ul li::before {
+                  font-size: 0.8rem; /* Adjust bullet size */
+                  top: 2px;
+             }
+              #announcements ul li span {
+                   font-size: 0.7rem; /* Smaller status label */
+              }
+
+
+              #weather-widget p {
+                 font-size: 0.9rem; /* Smaller weather text */
+              }
+             #weather-icon {
+                 font-size: 1.5rem; /* Smaller weather icon */
+             }
+
+
+            #news-articles {
+                padding: 20px; /* Reduced news padding */
+                margin-top: 25px;
+            }
+
+            #news-articles h3 {
+                font-size: 1.6rem; /* Smaller news heading */
+                 padding-bottom: 0.5em;
+                 margin-bottom: 1em;
+            }
+
+            .article {
+                padding: 15px; /* Reduced article padding */
+                margin-bottom: 25px;
+                gap: 15px;
+            }
+             .article-headline {
+                 font-size: 1.2rem; /* Smaller article headline */
+                 margin-bottom: 10px;
+             }
+             .article-description {
+                 font-size: 0.9rem; /* Smaller article description */
+                 margin-bottom: 10px;
+             }
+             .read-more-btn {
+                 font-size: 0.8rem; /* Smaller button */
+                 padding: 8px 12px;
+             }
+             .article-link {
+                  font-size: 1rem; /* Adjust link size */
+                  margin-top: 8px;
+             }
+
+
+            footer {
+                padding: 25px 10px; /* Reduced footer padding */
+                margin-top: 30px;
+            }
+
+            footer h4 {
+                font-size: 1.2rem; /* Smaller footer heading */
+                 margin-bottom: 10px;
+            }
+
+            footer p {
+                font-size: 0.9rem; /* Smaller footer text */
+                 margin-bottom: 15px;
+            }
+             footer hr {
+                 margin: 20px auto;
+             }
+
+            footer a {
+                font-size: 0.8rem; /* Smaller footer links */
+                margin: 0 8px;
+            }
+
+            footer p#copyright {
+                font-size: 0.8rem; /* Smaller copyright */
+                margin-top: 20px;
+            }
+
+        }
+
+        /* Animations */
+         @keyframes fadeIn {
+             from { opacity: 0; }
+             to { opacity: 1; }
+         }
+
+        @keyframes fadeInDown {
+             from { opacity: 0; transform: translateY(-20px); } /* Increased initial translation */
+             to { opacity: 1; transform: translateY(0); }
+         }
+
+         @keyframes fadeInUp {
+             from { opacity: 0; transform: translateY(20px); } /* Added fadeInUp */
+             to { opacity: 1; transform: translateY(0); }
+         }
+
+
+        @keyframes slideInLeft {
+             from { transform: translateX(-20px); opacity: 0; } /* Increased initial translation */
+             to { transform: translateX(0); opacity: 1; }
+         }
+
+        @keyframes slideInRight {
+             from { transform: translateX(20px); opacity: 0; } /* Increased initial translation */
+             to { opacity: 1; transform: translateX(0); opacity: 1; }
+         }
+
+
+    </style>
+</head>
+<body>
+<header>
+<div class="logo-area">
+<img alt="DepEd Logo" src="/static/logo (1).png"/>
+<h1>TRACKING &amp; ANALYTICS FOR NATIONWIDE ACADEMIC WATCH</h1>
+</div>
+<div class="header-right">
+<nav>
+<ul>
+<li><a href="/home"><i class="fas fa-home"></i> Home</a></li>
+<li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+<li><a href="/report"><i class="fas fa-file-alt"></i> Reports</a></li>
+<li><a href="#" id="accountBtn"><i class="fas fa-user-circle"></i></a></li>
+</ul>
+</nav>
+<div class="hamburger-menu" id="hamburger">
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+</div>
+</div>
+<div class="mobile-nav-overlay" id="navOverlay"></div>
+<div class="mobile-nav" id="mobileNav">
+<button class="close-btn" id="closeNav"><i class="fas fa-times"></i></button>
+<ul>
+<li><a href="/upload"><i class="fas fa-cogs"></i> Admin</a></li>
+<li><a href="/help"><i class="fas fa-question-circle"></i> Help</a></li>
+<li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+</ul>
+</div>
+</header>
+<div class="account-popup" id="accountPopup">
+<h4>Account</h4>
+<button onclick="window.location.href='/upload'"><i class="fas fa-cogs"></i> Admin</button>
+<button onclick="window.location.href='/help'"><i class="fas fa-question-circle"></i> Help</button>
+<button onclick="window.location.href='/logout'"><i class="fas fa-sign-out-alt"></i> Logout</button>
+</div>
+<main>
+<section id="welcome-section">
+<i class="fas fa-graduation-cap welcome-icons top-left"></i>
+<h2 id="welcome-message">Welcome back, <span id="user-fullname">User</span>!</h2>
+<p>"Tanaw" provides a dynamic and insightful view of nationwide academic enrollment data, empowering educators and administrators to make informed decisions.</p>
+<i class="fas fa-chart-bar welcome-icons bottom-right"></i>
+</section>
+<section id="dashboard-main"> <div id="dashboard-upper"> <div class="dashboard-widget" id="user-profile"> <h4><i class="fas fa-user-circle" style="margin-right: 10px;"></i> Your Profile</h4>
+<div class="profile-info-item"><i class="fas fa-id-card-alt"></i> <strong>Name:</strong> <span id="profile-name"></span></div>
+<div class="profile-info-item"><i class="fas fa-user-tag"></i> <strong>Role:</strong> <span id="profile-role">Administrator</span></div>
+<div class="profile-info-item"><i class="fas fa-envelope"></i> <strong>Email:</strong> <span id="profile-email"></span></div>
+<div class="profile-info-item"><i class="fas fa-building"></i> <strong>Department:</strong> <span id="profile-department">Data Management Unit</span></div>
+<div class="profile-info-item"><i class="fas fa-user-check"></i> <strong>Status:</strong> <span id="profile-status">Active</span></div>
+<button onclick="window.location.href='/logout'" style="background: var(--gradient-blue);"><i class="fas fa-sign-out-alt"></i> Logout</button>
+</div>
+<div class="dashboard-widget" id="system-status"> <h4><i class="fas fa-server" style="margin-right: 10px;"></i> System Overview</h4>
+<div class="system-info-item"><i class="fas fa-check-circle"></i> <strong>API Status:</strong> <span class="status-indicator-dot" style="background-color: var(--success-color);"></span> <span id="api-status-text">Operational</span></div>
+<div class="system-info-item"><i class="fas fa-database"></i> <strong>Database:</strong> <span class="status-indicator-dot" style="background-color: var(--success-color);"></span> <span id="db-status-text">Connected</span></div>
+<div class="system-info-item"><i class="fas fa-chart-pie"></i> <strong>Disk Usage:</strong> <span id="disk-usage">75%</span></div>
+<div class="system-info-item"><i class="fas fa-memory"></i> <strong>RAM Usage:</strong> <span id="ram-usage">65%</span></div>
+<div class="system-info-item"><i class="fas fa-microchip"></i> <strong>CPU Load:</strong> <span id="cpu-load">30%</span></div>
+<div class="system-info-item"><i class="fas fa-network-wired"></i> <strong>Network Latency:</strong> <span id="network-latency">25 ms</span></div>
+</div>
+</div>
+<div id="dashboard-widgets-grid"> <div class="widget-column"> <div class="dashboard-widget" id="realtime-clock-widget">
+<h4><i class="fas fa-clock" style="margin-right: 8px;"></i> Realtime Clock</h4>
+<div id="realtime-clock"></div>
+<div id="realtime-date"></div>
+</div>
+<div class="dashboard-widget" id="weather-widget">
+<h4><i class="fas fa-sun" style="margin-right: 8px;"></i> Weather in Manila</h4>
+<p><i class="fas fa-thermometer-half"></i> Temperature: <span id="weather-temp">30</span>°C</p>
+<p><i class="fas fa-cloud"></i> Condition: <span id="weather-condition">Partly Cloudy</span></p>
+<p><i class="fas fa-wind"></i> Wind: <span id="weather-wind">10</span> km/h</p>
+<div id="weather-icon" style="font-size: 1.2rem; color: var(--accent-color);"></div>
+</div>
+</div>
+<div class="widget-column"> <div class="dashboard-widget" id="calendar-widget" style="margin-bottom: 20px;">
+<h4><i class="fas fa-calendar-alt" style="margin-right: 8px;"></i> Calendar</h4>
+<div id="calendar"></div>
+
+<div class="dashboard-widget" id="visual-about-deped" style="margin-top: 20px;">
+<h4><i class="fas fa-school" style="margin-right: 8px;"></i> DepEd at a Glance</h4>
+<div style="display: flex; align-items: center; gap: 20px;">
+<img alt="DepEd Central Office" src="/static/deped_building.png" style="width: 40%; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+<p style="font-size: 0.95rem; color: var(--text-dark); max-width: 55%;">DepEd, the Philippines' education department, ensures access to quality basic education nationwide through thousands of schools and dedicated educators.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="widget-column"> <div class="dashboard-widget" id="quick-links">
+<h4><i class="fas fa-bolt" style="margin-right: 10px;"></i> Quick Actions</h4>
+<ul>
+<li><a href="/dashboard"><i class="fas fa-chart-line"></i> View Dashboard</a></li>
+<li><a href="/report"><i class="fas fa-file-pdf"></i> Generate Reports</a></li>
+<li><a href="/upload"><i class="fas fa-cloud-upload-alt"></i> Upload Data (Admin)</a></li>
+<li><a href="/help"><i class="fas fa-question"></i> Help Center</a></li>
+<li><a href="/settings"><i class="fas fa-cog"></i> Settings</a></li> </ul>
+</div>
+<div class="dashboard-widget" id="announcements">
+<h4><i class="fas fa-bullhorn" style="margin-right: 10px;"></i> Latest Updates</h4> <ul id="announcement-list">
+<li>New enrollment data for Q3 2024 has been published. <span style="color: var(--success-color);">(New)</span></li> <li>Maintenance on the reporting module scheduled for April 25th. <span style="color: var(--warning-color);">(Upcoming)</span></li> <li>Check out the interactive user guide for advanced features. <span style="color: var(--info-color);">(Updated)</span></li> <li>System performance enhancements deployed on April 16th. <span style="color: var(--success-color);">(Info)</span></li> </ul>
+</div>
+</div>
+</div>
+</section>
+<section id="news-articles">
+<h3>Latest Enrollment Updates</h3>
+<div class="article">
+<div class="article-image-container">
+<img alt="Article 1" class="article-image" src="/static/article1.JPG"/>
+</div>
+<div class="article-details">
+<h4 class="article-headline">DepEd kicks off enrollment in public schools for SY 2024-2025</h4>
+<p class="article-description">Based on Department Memorandum 32 s. 2024 signed by DepEd Undersecretary Nolasco Mempin, the conduct of enrollment in public elementary and secondary schools, including community learning centers, is from July 3 to 26. </p>
+<button class="read-more-btn">Read More</button>
+<a class="article-link" href="https://www.gmanetwork.com/news/topstories/nation/912085/deped-enrollment-sy-2024-2025/story/?amp" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+</div>
+</div>
+<div class="article">
+<div class="article-image-container">
+<img alt="Article 2" class="article-image" src="/static/article2.JPG"/>
+</div>
+<div class="article-details">
+<h4 class="article-headline">DepEd reports 89.79% student enrollment for school year 2024-2025.</h4>
+<p class="article-description">The DepEd further said most of the said students were enrolled in public schools, adding up to 21,610,597 students. DepEd’s target enrollees for this school year is 27,772,835.</p>
+<button class="read-more-btn">Read More</button>
+<a class="article-link" href="https://manilastandard.net/?p=314482662" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+</div>
+</div>
+<div class="article">
+<div class="article-image-container">
+<img alt="Article 3" class="article-image" src="/static/article3.JPG"/>
+</div>
+<div class="article-details">
+<h4 class="article-headline">W. Visayas schools welcome over 1.4-M learners</h4>
+<p class="article-description">ILOILO CITY – Schools in Western Visayas welcomed 1,409,134 learners from basic elementary education to senior high school as 2024-2025 academic year officially started on Monday.</p>
+<button class="read-more-btn">Read More</button>
+<a class="article-link" href="https://www.pna.gov.ph/index.php/articles/1229978" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+</div>
+</div>
+<div class="article">
+<div class="article-image-container">
+<img alt="Article 4" class="article-image" src="/static/article4.JPG"/>
+</div>
+<div class="article-details">
+<h4 class="article-headline">DepEd: SY 2024-2025 enrollment surpasses 20 million</h4>
+<p class="article-description">With over 20 million learners enrolled on the first day of classes for School Year (SY) 2024-2025 on Monday, July 29, the Department of Education (DepEd) expected the number to increase as enrollment continues in the coming months.</p>
+<button class="read-more-btn">Read More</button>
+<a class="article-link" href="https://mb.com.ph/2024/7/28/dep-ed-sy-2024-2025-enrollment-surpasses-20-million" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+</div>
+</div>
+</section>
+</main>
+<footer>
+<div>
+<h4><i class="fas fa-university" style="margin-right: 10px;"></i> Department of Education</h4>
+<p>Empowering the Nation Through Quality Education.</p>
+<hr/>
+<div>
+<a href="/home">Home</a>
+<a href="/dashboard">Dashboard</a>
+<a href="/report">Reports</a>
+<a href="/help">Help</a>
+<a href="/upload">Admin</a>
+</div>
+<p id="copyright">© 2025 DepEd Enrollment Dashboard. All rights reserved.</p>
+</div>
+</footer>
+<script>
+        // Function to get data from localStorage
+        function getLocalStorage(key) {
+            return localStorage.getItem(key);
+        }
+
+        // Update copyright year
+        function updateCopyrightYear() {
+            const year = new Date().getFullYear();
+            document.getElementById('copyright').textContent = `© ${year} DepEd Enrollment Dashboard. All rights reserved.`;
+        }
+        updateCopyrightYear();
+
+        // Footer hover effect (using JS for compatibility with animation)
+        const footer = document.querySelector('footer');
+        if (footer) {
+            footer.addEventListener('mouseover', () => {
+                footer.style.background = 'var(--gradient-yellow)'; // Use gradient
+                footer.style.color = 'var(--deped-blue)';
+                footer.style.boxShadow = '0 8px 12px rgba(0, 0, 0, 0.3)';
+                footer.style.transform = 'translateY(-3px)';
+                 // Update colors for children like h4, p, a if needed, or rely on general styles
+                 footer.querySelectorAll('h4').forEach(el => el.style.color = 'var(--deped-blue)');
+                 footer.querySelectorAll('p').forEach(el => el.style.color = 'var(--deped-blue)');
+                 footer.querySelectorAll('a').forEach(el => el.style.color = 'var(--deped-blue)');
+
+
+            });
+            footer.addEventListener('mouseout', () => {
+                footer.style.background = 'var(--gradient-blue)'; // Use gradient
+                footer.style.color = 'var(--deped-light-blue)';
+                footer.style.boxShadow = 'var(--box-shadow-md)';
+                footer.style.transform = 'translateY(0)';
+                 footer.querySelectorAll('h4').forEach(el => el.style.color = 'var(--deped-yellow)');
+                 footer.querySelectorAll('p').forEach(el => el.style.color = 'var(--deped-white)');
+                 footer.querySelectorAll('a').forEach(el => el.style.color = 'var(--deped-light-blue)');
+            });
+        }
+
+        // Update realtime clock and date
+        function updateRealtimeClock() {
+            const now = new Date();
+            // Options for date formatting
+            const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = now.toLocaleDateString(undefined, dateOptions); // e.g., April 18, 2025
+
+            // Options for time formatting (12-hour with AM/PM)
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            const formattedTime = now.toLocaleTimeString(undefined, timeOptions); // e.g., 10:30:00 PM
+
+            document.getElementById('realtime-clock').textContent = formattedTime;
+            document.getElementById('realtime-date').textContent = formattedDate;
+        }
+
+        setInterval(updateRealtimeClock, 1000);
+        updateRealtimeClock(); // Initial call
+
+        // Render calendar
+        function renderCalendar() {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            const todayDate = now.getDate(); // Store just the day number
+
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay(); // 0 for Sunday, 6 for Saturday
+
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+
+            const calendarDiv = document.getElementById('calendar');
+            let calendarHTML = ''; // Start building HTML inside the #calendar div
+            const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+            daysOfWeek.forEach(day => {
+                calendarHTML += `<div class="calendar-day header">${day}</div>`;
+            });
+
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                calendarHTML += `<div class="calendar-day"></div>`; // Empty slots for days before the 1st
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isCurrentDay = day === todayDate && now.getMonth() === new Date().getMonth() && now.getFullYear() === new Date().getFullYear();
+                calendarHTML += `<div class="calendar-day ${isCurrentDay ? 'current-day' : ''}">${day}</div>`;
+            }
+
+            calendarDiv.innerHTML = calendarHTML; // Insert the generated HTML
+             // Update the title in the parent widget
+             document.querySelector('#calendar-widget h4').innerHTML = `<i class="fas fa-calendar-alt" style="margin-right: 8px;"></i> ${monthNames[currentMonth]} ${currentYear}`;
+
+        }
+
+        renderCalendar(); // Initial calendar render
+
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const mobileNav = document.getElementById('mobileNav');
+        const navOverlay = document.getElementById('navOverlay');
+        const closeNav = document.getElementById('closeNav');
+        const accountBtn = document.getElementById('accountBtn');
+        const accountPopup = document.getElementById('accountPopup');
+
+        hamburger.addEventListener('click', () => {
+            mobileNav.classList.add('open');
+            navOverlay.style.display = 'block';
+        });
+
+        closeNav.addEventListener('click', () => {
+            mobileNav.classList.remove('open');
+            navOverlay.style.display = 'none';
+        });
+
+        navOverlay.addEventListener('click', () => {
+            mobileNav.classList.remove('open');
+            navOverlay.style.display = 'none';
+        });
+
+        // Account popup functionality
+        accountBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            accountPopup.style.display = accountPopup.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close account popup when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!accountPopup.contains(event.target) && event.target !== accountBtn && !accountBtn.contains(event.target)) {
+                accountPopup.style.display = 'none';
+            }
+        });
+
+
+        // Simulate Weather Updates (for visual effect)
+        function updateWeather() {
+            // Data based on current date and location (Manila, Philippines - April 18, 2025)
+            const temperature = '32'; // Example average for April in Manila
+            const conditions = 'Partly Cloudy'; // Common for April
+            const windSpeed = '15'; // Example wind speed
+
+            document.getElementById('weather-temp').textContent = temperature;
+            document.getElementById('weather-condition').textContent = conditions;
+            document.getElementById('weather-wind').textContent = windSpeed;
+
+            const weatherIconElement = document.getElementById('weather-icon');
+            weatherIconElement.innerHTML = '';
+            // Update icon based on simulated condition
+            if (conditions.includes("Cloudy")) {
+                 weatherIconElement.innerHTML = '<i class="fas fa-cloud"></i>';
+                 weatherIconElement.style.color = 'var(--text-light)';
+            } else if (conditions.includes("Rain")) {
+                 weatherIconElement.innerHTML = '<i class="fas fa-cloud-rain"></i>';
+                 weatherIconElement.style.color = 'var(--secondary-blue)';
+            } else if (conditions.includes("Sunny")) {
+                 weatherIconElement.innerHTML = '<i class="fas fa-sun"></i>';
+                 weatherIconElement.style.color = 'var(--accent-color)';
+            } else { // Partly Cloudy
+                 weatherIconElement.innerHTML = '<i class="fas fa-cloud-sun"></i>';
+                 weatherIconElement.style.color = 'var(--accent-color)';
+            }
+        }
+
+        updateWeather();
+
+
+        // Simulate System Status Updates (for visual effect)
+        function updateSystemStatus() {
+             // Simulate data based on typical ranges
+             const disk = Math.floor(Math.random() * 30) + 65; // 65% to 94%
+             const ram = Math.floor(Math.random() * 20) + 55; // 55% to 74%
+             const cpu = Math.floor(Math.random() * 25) + 20; // 20% to 44%
+             const latency = Math.floor(Math.random() * 40) + 15; // 15 ms to 54 ms
+             const activeUsers = Math.floor(Math.random() * 60) + 30; // 30 to 89
+             const pendingJobs = Math.floor(Math.random() * 10) + 1; // 1 to 10
+             const uptimeDays = 5; // Static for simulation
+
+
+            document.getElementById('disk-usage').textContent = `${disk}%`;
+            document.getElementById('ram-usage').textContent = `${ram}%`;
+            document.getElementById('cpu-load').textContent = `${cpu}%`;
+            document.getElementById('network-latency').textContent = `${latency} ms`;
+             document.getElementById('system-uptime').textContent = `${uptimeDays} days`;
+             document.getElementById('active-users').textContent = activeUsers;
+             document.getElementById('pending-jobs').textContent = pendingJobs;
+
+
+            // Update status indicator colors based on thresholds
+             document.querySelector('#system-status #disk-usage').previousElementSibling.style.color = disk > 85 ? 'var(--danger-color)' : disk > 75 ? 'var(--warning-color)' : 'var(--success-color)';
+             document.querySelector('#system-status #ram-usage').previousElementSibling.style.color = ram > 70 ? 'var(--danger-color)' : ram > 60 ? 'var(--warning-color)' : 'var(--success-color)';
+             document.querySelector('#system-status #cpu-load').previousElementSibling.style.color = cpu > 60 ? 'var(--danger-color)' : cpu > 40 ? 'var(--warning-color)' : 'var(--success-color)';
+              document.querySelector('#system-status #network-latency').previousElementSibling.style.color = latency > 50 ? 'var(--danger-color)' : latency > 30 ? 'var(--warning-color)' : 'var(--success-color)';
+             document.querySelector('#system-status #active-users').previousElementSibling.style.color = activeUsers > 70 ? 'var(--warning-color)' : 'var(--success-color)';
+              document.querySelector('#system-status #pending-jobs').previousElementSibling.style.color = pendingJobs > 5 ? 'var(--warning-color)' : 'var(--success-color)';
+
+
+        }
+
+        setInterval(updateSystemStatus, 5000); // Update every 5 seconds
+        updateSystemStatus(); // Initial update
+
+        // Update welcome message and profile info on page load using IDs
+        document.addEventListener('DOMContentLoaded', () => {
+             // Get data from localStorage or a backend/session
+            const firstName = getLocalStorage('firstName') || 'Shu'; // Default if not found
+            const lastName = getLocalStorage('lastName') || 'Mamamo'; // Default if not found
+            const email = getLocalStorage('email') || 's.mamamo@deped.gov.ph'; // Default
+             const role = getLocalStorage('role') || 'Administrator'; // Default
+             const department = getLocalStorage('department') || 'Data Management Unit'; // Default
+             const phone = getLocalStorage('phone') || '+63 912 345 6789'; // Default
+             const address = getLocalStorage('address') || 'DepEd Central Office, Pasig City'; // Default
+             const dateJoined = getLocalStorage('dateJoined') || 'January 15, 2020'; // Default
+             const status = getLocalStorage('status') || 'Active'; // Default
+             const lastLogin = getLocalStorage('lastLogin') || 'April 18, 2025'; // Default
+
+
+            // Update Welcome Message
+            const welcomeMessageElement = document.getElementById('welcome-message');
+             if (welcomeMessageElement) {
+                 welcomeMessageElement.textContent = `Welcome back, <span id="user-fullname">User</span>!`;
+             }
+
+
+            // Update Profile Widget
+            const profileNameSpan = document.getElementById('profile-name');
+            const profileRoleSpan = document.getElementById('profile-role');
+            const profileEmailSpan = document.getElementById('profile-email');
+            const profileDepartmentSpan = document.getElementById('profile-department');
+             const profilePhoneSpan = document.getElementById('profile-phone');
+             const profileAddressSpan = document.getElementById('profile-address');
+             const profileDateJoinedSpan = document.getElementById('profile-date-joined');
+             const profileStatusSpan = document.getElementById('profile-status');
+             const profileLastLoginSpan = document.querySelector('#user-profile .profile-info-item:last-child span'); // This one needs special handling if order changes
+
+             if (profileNameSpan) profileNameSpan.textContent = `${firstName} ${lastName}`;
+             if (profileRoleSpan) profileRoleSpan.textContent = role;
+             if (profileEmailSpan) profileEmailSpan.textContent = email;
+             if (profileDepartmentSpan) profileDepartmentSpan.textContent = department;
+             if (profilePhoneSpan) profilePhoneSpan.textContent = phone;
+             if (profileAddressSpan) profileAddressSpan.textContent = address;
+             if (profileDateJoinedSpan) profileDateJoinedSpan.textContent = dateJoined;
+             if (profileStatusSpan) profileStatusSpan.textContent = status;
+              // Update Last Login - assuming it's not coming from localStorage dynamically in this example
+             // if (profileLastLoginSpan) profileLastLoginSpan.textContent = lastLogin;
+
+
+            // Update static system overview info (if any) - currently all simulated dynamic
+            // document.getElementById('api-status-text').textContent = 'Operational'; // Example
+            // document.getElementById('db-status-text').textContent = 'Connected'; // Example
+
+
+        });
+    </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const fullName = (localStorage.getItem('firstName') || 'User') + ' ' + (localStorage.getItem('lastName') || '');
+        const email = localStorage.getItem('email') || 'Not Provided';
+
+        const welcomeEl = document.getElementById('user-fullname');
+        const nameEl = document.getElementById('profile-name');
+        const emailEl = document.getElementById('profile-email');
+
+        if (welcomeEl) welcomeEl.textContent = fullName;
+        if (nameEl) nameEl.textContent = fullName;
+        if (emailEl) emailEl.textContent = email;
+    });
+</script>
+
+</body>
+</html>

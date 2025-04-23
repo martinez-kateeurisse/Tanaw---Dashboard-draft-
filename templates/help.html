@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help - DepEd Enrollment Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Candu&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* DepEd Solid Color Palette */
+        :root {
+            --deped-blue: #00308F; /* Deep Blue */
+            --deped-yellow: #FFDA63; /* Golden Yellow */
+            --deped-light-blue: #ADD8E6; /* Light Blue */
+            --deped-white: #FFFFFF;
+            --deped-gray: #D3D3D3;
+            --text-dark: #333;
+            --text-light: #777;
+            --box-shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.08);
+            --transition-default: all 0.3s ease-in-out;
+            --border-radius-md: 10px;
+            --border-radius-sm: 5px;
+        }
+
+        /* DepEd Fonts */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--deped-light-blue);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .help-container {
+            background-color: var(--deped-white);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--box-shadow-sm);
+            padding: 40px; /* Increased padding */
+            width: 90%; /* Wider container */
+            max-width: 700px; /* Increased max-width */
+            text-align: left; /* Align text to the left for better readability */
+        }
+
+        /* DepEd Logo Placeholder */
+        .deped-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .deped-logo img {
+            max-width: 150px;
+            height: auto;
+            transition: transform 0.3s ease-in-out; /* Add transition for smooth hover effect */
+        }
+
+        .deped-logo img:hover {
+            transform: scale(1.1); /* Slight zoom on hover */
+        }
+
+        h2 {
+            font-family: 'Candu', sans-serif;
+            color: var(--deped-blue);
+            margin-bottom: 25px; /* Slightly increased margin */
+            font-size: 2.5rem; /* Slightly larger font size */
+            text-align: center; /* Center the title */
+        }
+
+        .help-text {
+            margin-bottom: 25px; /* Increased margin */
+            font-size: 1.1rem; /* Slightly larger font size */
+            color: var(--text-light);
+            line-height: 1.8; /* Improved line height for readability */
+        }
+
+        .help-text strong {
+            color: var(--deped-blue);
+            font-weight: 700;
+        }
+
+        .report-bug-button {
+            background-color: var(--deped-yellow);
+            color: var(--deped-blue);
+            padding: 15px 30px; /* Increased padding */
+            border: none;
+            border-radius: var(--border-radius-md); /* More rounded button */
+            cursor: pointer;
+            font-size: 1.2rem; /* Larger font size */
+            transition: var(--transition-default);
+            box-shadow: var(--box-shadow-sm);
+            position: relative; /* For the loading indicator */
+        }
+
+        .report-bug-button:hover {
+            background-color: var(--deped-blue);
+            color: var(--deped-yellow);
+            transform: translateY(-2px); /* Slight lift on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
+        }
+
+        .report-bug-button.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--deped-blue);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .report-form-container {
+            margin-top: 30px; /* Increased margin */
+            padding: 30px; /* Increased padding */
+            border: 1px solid var(--deped-gray);
+            border-radius: var(--border-radius-md); /* More rounded corners */
+            background-color: #f9f9f9;
+            text-align: left;
+            display: none; /* Initially hidden */
+            box-shadow: var(--box-shadow-sm);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .report-form-container.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .report-form-container h3 {
+            color: var(--deped-blue);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-align: center; /* Center the form title */
+        }
+
+        .report-form-container label {
+            display: block;
+            margin-bottom: 10px; /* Increased margin */
+            font-weight: 600; /* Slightly lighter font weight */
+            color: var(--text-dark);
+        }
+
+        .report-form-container textarea {
+            width: calc(100% - 20px); /* Adjust width for padding */
+            padding: 12px; /* Increased padding */
+            margin-bottom: 20px; /* Increased margin */
+            border: 1px solid var(--deped-gray); /* Darker border */
+            border-radius: var(--border-radius-sm);
+            box-sizing: border-box;
+            min-height: 120px; /* Increased minimum height */
+            font-size: 1.05rem;
+        }
+
+        .report-form-container button[type="submit"] {
+            background-color: var(--deped-blue);
+            color: var(--deped-yellow);
+            padding: 12px 25px; /* Increased padding */
+            border: none;
+            border-radius: var(--border-radius-md); /* More rounded button */
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition-default);
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        .report-form-container button[type="submit"]:hover {
+            background-color: var(--deped-yellow);
+            color: var(--deped-blue);
+            transform: translateY(-2px); /* Slight lift on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
+        }
+
+        .back-link {
+            margin-top: 30px; /* Increased margin */
+            text-align: center; /* Center the back link */
+        }
+
+        .back-link a {
+            color: var(--deped-blue);
+            text-decoration: none;
+            font-weight: 700; /* Stronger font weight */
+            font-size: 1.1rem; /* Slightly larger font size */
+            transition: color var(--transition-default);
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+            color: var(--deped-yellow);
+        }
+
+        /* Success Message */
+        #successMessage {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border-radius: var(--border-radius-sm);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0s 0.3s;
+        }
+
+        #successMessage.show {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease-in-out, visibility 0s 0s;
+        }
+    </style>
+</head>
+<body>
+    <div class="help-container">
+        <div class="deped-logo">
+            <img src="/static/logo (2).png" alt="DepEd Logo" style="height: 100px;">
+        </div>
+        <h2>Help</h2>
+        <div class="help-text">
+            <p>This dashboard is designed to provide DepEd schools with a centralized platform for visualizing and managing enrollment data.</p>
+            <p>It allows for the analysis of key enrollment indicators, providing insights into student demographics and trends across different locations and academic years.</p>
+            <p>This project is facilitated by the students of <strong>BSCPE 3-2</strong> from the <strong>PUP College of Engineering</strong>.</p>
+        </div>
+        <div style="text-align: center;">
+            <button class="report-bug-button" onclick="toggleReportForm()">Report a Bug</button>
+        </div>
+
+        <div id="reportFormContainer" class="report-form-container">
+            <h3>Report an Issue</h3>
+            <form id="bugReportForm" action="/report_bug" method="post">
+                <label for="description">Describe the issue:</label>
+                <textarea id="description" name="description" required></textarea>
+                <button type="submit">Submit Report</button>
+            </form>
+        </div>
+
+        <div class="back-link">
+            <a href="/home"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div id="successMessage">Bug report submitted. Thank you!</div>
+
+    <script>
+        function toggleReportForm() {
+            const reportForm = document.getElementById('reportFormContainer');
+            reportForm.classList.toggle('show');
+        }
+
+        document.getElementById('bugReportForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const description = document.getElementById('description').value;
+            const reportButton = document.querySelector('.report-bug-button');
+            const successMessage = document.getElementById('successMessage');
+
+            // Indicate loading state
+            reportButton.textContent = 'Submitting...';
+            reportButton.classList.add('loading');
+
+            // Simulate submission delay (replace with actual API call)
+            setTimeout(() => {
+                // Hide loading state
+                reportButton.textContent = 'Report a Bug';
+                reportButton.classList.remove('loading');
+
+                // Show success message
+                successMessage.classList.add('show');
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000); // Hide after 3 seconds
+
+                document.getElementById('reportFormContainer').classList.remove('show');
+                document.getElementById('bugReportForm').reset();
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

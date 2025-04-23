@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TANAW: Compare Datasets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Candu&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* DepEd Solid Color Palette */
+        :root {
+            --deped-blue: #00308F; /* Deep Blue */
+            --deped-yellow: #FFDA63; /* Golden Yellow */
+            --deped-light-blue: #ADD8E6; /* Light Blue */
+            --deped-white: #FFFFFF;
+            --deped-gray: #D3D3D3;
+            --text-dark: #333;
+            --text-light: #777;
+            --box-shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.08);
+            --box-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --transition-default: all 0.3s ease-in-out;
+            --border-radius-md: 10px;
+            --border-radius-sm: 5px;
+        }
+
+        /* DepEd Fonts */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--deped-white);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--deped-white);
+            margin-bottom: 0.6em;
+            letter-spacing: -0.5px;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            animation: fadeInDown 0.8s ease-out;
+            margin-bottom: 0;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--deped-blue); /* Changed H2 color for section titles */
+            text-align: center; /* Center section titles */
+            margin-bottom: 1em;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--deped-blue);
+            margin-bottom: 1em;
+        }
+
+        /* Solid Header Section */
+        header {
+            background-color: var(--deped-blue);
+            color: var(--deped-white);
+            padding: 20px;
+            border-radius: var(--border-radius-md);
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-color: rgba(255, 218, 99, 0.1);
+            transform: rotate(-20deg);
+            z-index: -1;
+        }
+
+        header .logo-area {
+            display: flex;
+            align-items: center;
+        }
+
+        header .logo-area img {
+            height: 85px; /* Adjusted logo height */
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        header .logo-area h1 {
+             font-size: 1.1rem; /* Adjusted text size */
+             font-weight: bold;
+             margin: 0;
+             line-height: 1;
+        }
+
+        /* Navigation and Account Dropdown Container */
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Solid Navigation Bar */
+        nav {
+            background-color: transparent;
+            border-radius: var(--border-radius-md);
+            padding: 0;
+            margin: 0;
+            animation: none;
+            transform: none;
+            opacity: 1;
+            margin-right: 15px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        nav ul li a {
+            display: inline-flex;
+            padding: 8px 15px;
+            text-decoration: none;
+            color: var(--deped-blue);
+            background-color: var(--deped-white);
+            border: 1px solid var(--deped-yellow);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition-default);
+            align-items: center; /* Vertically align icon and text */
+            white-space: nowrap;
+        }
+
+        nav ul li a:hover {
+            background-color: var(--deped-yellow);
+            color: var(--deped-blue);
+            border-color: var(--deped-yellow);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        nav ul li a:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--deped-light-blue);
+        }
+
+        nav ul li a i {
+             margin-right: 5px; /* Adjusted icon margin */
+        }
+
+        /* Hamburger Menu */
+        .hamburger-menu {
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            gap: 7px;
+            z-index: 103; /* Higher than mobile nav */
+        }
+
+        .hamburger-menu .bar {
+            width: 30px;
+            height: 4px;
+            background-color: var(--deped-white);
+            border-radius: 4px;
+            transition: var(--transition-default);
+        }
+
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 48, 143, 0.8); /* Slightly darker overlay */
+            z-index: 101; /* Below the actual mobile nav content */
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--deped-blue);
+            width: 90%; /* Adjust width for better mobile view */
+            max-width: 400px;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--box-shadow-md);
+            z-index: 102; /* To be on top of the overlay */
+            margin-top: 0; /* Reset margin */
+            padding: 20px;
+        }
+
+        .mobile-nav.open {
+            display: block;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translate(-50%, -60%); opacity: 0; }
+            to { transform: translate(-50%, -50%); opacity: 1; }
+        }
+
+        .mobile-nav .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: var(--deped-yellow);
+            font-size: 1.8rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .mobile-nav ul li a {
+            display: block;
+            text-decoration: none;
+            color: var(--deped-yellow);
+            padding: 15px 25px;
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition-default);
+            text-align: center;
+            width: 100%;
+        }
+
+        .mobile-nav ul li a:hover {
+            background-color: rgba(255, 218, 99, 0.2);
+        }
+
+        .account-popup {
+            display: none;
+            position: absolute;
+            top: 60px; /* Adjust based on header height if needed */
+            right: 20px; /* Align near the account icon */
+            background-color: var(--deped-white);
+            border: 1px solid var(--deped-gray);
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--box-shadow-md);
+            padding: 15px;
+            z-index: 101;
+            width: 180px;
+            text-align: left;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .account-popup h4 {
+            color: var(--deped-blue);
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .account-popup button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--deped-light-blue);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--deped-white);
+            color: var(--deped-blue);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition-default);
+            text-align: left;
+        }
+
+        .account-popup button i {
+            margin-right: 8px;
+        }
+
+        .account-popup button:hover {
+            background-color: var(--deped-light-blue);
+            color: var(--deped-blue);
+        }
+
+        /* Comparison Section Specific Styles */
+        #comparison-section {
+             padding: 20px;
+        }
+
+        .comparison-container { /* Renamed from geographic-view-container */
+             background-color: var(--deped-white);
+             border-radius: var(--border-radius-md);
+             box-shadow: var(--box-shadow-md);
+             overflow: hidden; /* Important if iframe has specific dimensions */
+             padding: 25px;
+        }
+
+        /* Styles for the upload form */
+        .upload-form {
+            background-color: var(--deped-light-blue);
+            padding: 25px;
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px dashed var(--deped-blue);
+        }
+
+        .upload-form label {
+            display: block;
+            font-weight: 600;
+            color: var(--deped-blue);
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .upload-form input[type="file"] {
+            display: block;
+            margin: 0 auto 20px auto; /* Center the input */
+            padding: 10px;
+            border: 1px solid var(--deped-gray);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--deped-white);
+            max-width: 400px; /* Limit width */
+            width: 90%;
+        }
+
+        /* Style the file input button provided by the browser */
+        .upload-form input[type="file"]::file-selector-button {
+            background-color: var(--deped-blue);
+            color: var(--deped-white);
+            border: none;
+            padding: 8px 15px;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition-default);
+            margin-right: 10px;
+        }
+
+        .upload-form input[type="file"]::file-selector-button:hover {
+            background-color: var(--deped-yellow);
+            color: var(--deped-blue);
+        }
+
+        .upload-form button[type="submit"] {
+            padding: 12px 25px;
+            text-decoration: none;
+            color: var(--deped-white);
+            background-color: var(--deped-blue);
+            border: 2px solid var(--deped-blue);
+            border-radius: var(--border-radius-sm);
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: var(--transition-default);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+         .upload-form button[type="submit"]:hover {
+            background-color: var(--deped-yellow);
+            color: var(--deped-blue);
+            border-color: var(--deped-yellow);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+         .upload-form button[type="submit"]:focus {
+             outline: none;
+             box-shadow: 0 0 0 3px var(--deped-light-blue);
+        }
+
+        .back-link { /* Style for the back link */
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--deped-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+            color: var(--deped-yellow);
+        }
+
+        #comparisonFrame { /* Styles for the results iframe */
+             width: 100%;
+             height: 2550px; /* Adjust as needed, maybe make dynamic later */
+             border: none;
+             border-radius: var(--border-radius-sm);
+             box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1);
+             margin-top: 20px; /* Add some space above the frame */
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--deped-blue);
+            color: var(--deped-yellow);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            box-shadow: var(--box-shadow-sm);
+            z-index: 99;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--deped-yellow);
+            color: var(--deped-blue);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px;
+                flex-direction: row; /* Ensure logo and nav stay horizontal */
+                 justify-content: space-between; /* Space them out */
+            }
+
+            header .logo-area {
+                 align-items: center;
+                 /* flex-grow: 1; Optional: allow logo area to take more space */
+            }
+
+             header .logo-area img {
+                 height: 60px; /* Slightly smaller logo */
+                 margin-right: 8px;
+            }
+
+             header .logo-area h1 {
+                font-size: 0.6rem; /* Adjust if too small */
+                line-height: 1.2;
+            }
+
+            nav {
+                 display: none; /* Hide the main navigation on smaller screens */
+            }
+
+            .header-right {
+                 justify-content: flex-end; /* Move hamburger to the right */
+                 width: auto; /* Don't force width */
+            }
+
+             .hamburger-menu {
+                 display: flex; /* Show the hamburger menu */
+            }
+
+            .account-popup {
+                top: 55px;
+                right: 10px;
+                width: 160px;
+                padding: 10px;
+            }
+
+             .account-popup h4 {
+                 font-size: 1rem;
+                 margin-bottom: 8px;
+            }
+
+             .account-popup button {
+                 font-size: 0.9rem;
+                 padding: 8px 12px;
+                 margin-bottom: 6px;
+            }
+
+            #comparison-section {
+                 padding: 10px;
+            }
+
+            .comparison-container {
+                 padding: 15px;
+            }
+
+             .upload-form {
+                 padding: 20px;
+            }
+
+            .upload-form label {
+                 font-size: 1rem;
+            }
+
+            .upload-form input[type="file"] {
+                max-width: none; /* Allow full width */
+                width: 100%;
+            }
+
+             .upload-form button[type="submit"] {
+                 font-size: 1rem;
+                 padding: 10px 20px;
+                 width: 80%; /* Make button wider */
+                 justify-content: center; /* Center icon/text */
+            }
+
+            #comparisonFrame {
+                 height: 1500px; /* Adjust iframe height for smaller screens */
+            }
+
+             footer p {
+                 font-size: 0.9rem !important;
+            }
+        }
+
+         /* Animations */
+         @keyframes fadeInDown {
+             from { opacity: 0; transform: translateY(-20px); }
+             to { opacity: 1; transform: translateY(0); }
+         }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-area">
+             <img src="/static/logo (1).png" alt="DepEd Logo"> <h1>TRACKING & ANALYTICS FOR NATIONWIDE ACADEMIC WATCH</h1>
+        </div>
+
+        <div class="header-right">
+             <nav>
+                 <ul>
+                     <li><a href="/home"><i class="fas fa-home"></i> Home</a></li>
+                     <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                     <li><a href="/report"><i class="fas fa-file-alt"></i> Reports</a></li> <li><a href="#" id="accountBtn"><i class="fas fa-user-circle"></i></a></li>
+                 </ul>
+             </nav>
+             <div class="hamburger-menu" id="hamburger">
+                 <div class="bar"></div>
+                 <div class="bar"></div>
+                 <div class="bar"></div>
+             </div>
+        </div>
+        <div class="mobile-nav-overlay" id="navOverlay"></div>
+        <div class="mobile-nav" id="mobileNav">
+             <button class="close-btn" id="closeNav"><i class="fas fa-times"></i></button>
+             <ul>
+                 <li><a href="/home"><i class="fas fa-home"></i> Home</a></li>
+                 <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                 <li><a href="/report"><i class="fas fa-file-alt"></i> Reports</a></li>
+                 <li><a href="/upload"><i class="fas fa-cogs"></i> Admin</a></li>
+                 <li><a href="/help"><i class="fas fa-question-circle"></i> Help</a></li>
+                 <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+             </ul>
+        </div>
+    </header>
+
+    <div class="account-popup" id="accountPopup">
+        <h4>Account</h4>
+        <button onclick="window.location.href='/upload'"><i class="fas fa-cogs"></i> Admin</button>
+        <button onclick="window.location.href='/help'"><i class="fas fa-question-circle"></i> Help</button>
+        <button onclick="window.location.href='/logout'"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <section id="comparison-section">
+        <div class="comparison-container">
+            <h2>Compare Datasets</h2>
+
+            <form id="uploadForm" class="upload-form" action="/process-comparison" method="post" enctype="multipart/form-data">
+                <label for="csvFile">Upload New Cleaned CSV Dataset for Comparison:</label>
+                <input type="file" id="csvFile" name="csvFile" accept=".csv" required>
+                <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px;">
+                    Upload a cleaned CSV file. This will be compared against the currently loaded dataset.
+                </p>
+                <button type="submit"><i class="fas fa-exchange-alt"></i> Compare Now</button>
+                 <a href="/report" class="back-link"> <i class="fas fa-arrow-left"></i> Back to Main Report</a> </form>
+
+            <div class="comparison-results-content">
+                 <iframe id="comparisonFrame" src="" frameborder="0" title="Dataset Comparison Results">
+                     <p>Comparison results will appear here after uploading a file and clicking "Compare Now".</p>
+                 </iframe>
+            </div>
+        </div>
+    </section>
+
+    <button onclick="scrollToTop()" class="back-to-top"><i class="fas fa-arrow-up"></i></button>
+
+    <footer style="background-color: var(--deped-light-blue); color: var(--deped-blue); text-align: center; padding: 20px; border-radius: var(--border-radius-md); margin-top: 30px; box-shadow: var(--box-shadow-md); transition: var(--transition-default);">
+        <p style="font-size: 1.1rem; font-weight: bold;">"Susi sa Kinabukasan" - Empowering Filipino Education <i class="fas fa-book-open"></i></p>
+        <p style="font-size: 0.9rem;">Data-driven insights for a brighter future, powered by innovation.</p>
+        <p id="copyright" style="font-size: 0.8rem; color: var(--text-light); margin-top: 15px;">© 2025 DepEd Enrollment Dashboard. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.getElementById('hamburger');
+            const mobileNav = document.getElementById('mobileNav');
+            const navOverlay = document.getElementById('navOverlay');
+            const closeNav = document.getElementById('closeNav');
+            const accountBtn = document.getElementById('accountBtn');
+            const accountPopup = document.getElementById('accountPopup');
+            const backToTopButton = document.querySelector('.back-to-top');
+            const uploadForm = document.getElementById('uploadForm');
+            const comparisonFrame = document.getElementById('comparisonFrame');
+
+            // Hamburger Menu Logic (Same as original)
+            if (hamburger && mobileNav && navOverlay && closeNav) {
+                hamburger.addEventListener('click', function() {
+                    mobileNav.classList.add('open');
+                    navOverlay.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                });
+
+                function closeMobileMenu() {
+                    mobileNav.classList.remove('open');
+                    navOverlay.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+
+                closeNav.addEventListener('click', closeMobileMenu);
+                navOverlay.addEventListener('click', closeMobileMenu);
+            }
+
+            // Account Popup Logic (Same as original)
+            if (accountBtn && accountPopup) {
+                accountBtn.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    accountPopup.style.display = (accountPopup.style.display === 'block') ? 'none' : 'block';
+                });
+            }
+
+            // Close the account popup if clicked outside (Same as original)
+            document.addEventListener('click', function(event) {
+                if (accountPopup && accountPopup.style.display === 'block') {
+                    if (accountBtn && !accountBtn.contains(event.target) && !accountPopup.contains(event.target)) {
+                        accountPopup.style.display = 'none';
+                    }
+                }
+            });
+
+            // Show/Hide Back to Top Button (Same as original)
+            window.addEventListener('scroll', () => {
+                if (backToTopButton) {
+                    if (window.scrollY > 300) {
+                        backToTopButton.classList.add('show');
+                    } else {
+                        backToTopButton.classList.remove('show');
+                    }
+                }
+            });
+
+
+        }); // End DOMContentLoaded
+
+        // Function for Back to Top Button (Same as original)
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Function to update Copyright Year (Same as original)
+         function updateCopyrightYear() {
+             const year = new Date().getFullYear();
+             const copyrightEl = document.getElementById('copyright');
+             if (copyrightEl) {
+                  // Use textContent for security
+                  copyrightEl.textContent = `© ${year} DepEd Enrollment Dashboard. All rights reserved.`;
+             }
+         }
+        updateCopyrightYear(); // Call the function
+
+        // Footer hover effect (Same as original)
+         const footer = document.querySelector('footer');
+         if (footer) {
+             footer.addEventListener('mouseover', () => {
+                 footer.style.backgroundColor = 'var(--deped-yellow)';
+                 footer.style.color = 'var(--deped-blue)';
+             });
+             footer.addEventListener('mouseout', () => {
+                 footer.style.backgroundColor = 'var(--deped-light-blue)';
+                 footer.style.color = 'var(--deped-blue)';
+             });
+         }
+
+    </script>
+
+</body>
+</html>

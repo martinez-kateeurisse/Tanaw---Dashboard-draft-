@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Logout</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Candu&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deped-blue: #00308F;
+            --deped-yellow: #FFDA63;
+            --deped-light-blue: #ADD8E6;
+            --deped-white: #FFFFFF;
+            --text-dark: #333;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--deped-light-blue);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"%3E%3Cg fill-opacity="0.4"%3E%3Cpath fill="%2300308f" d="M0 38.59l2.83-2.83L38.59 0 40 1.41zM1.41 40L37.17 2.83 40 0l-2.83 2.83z"/%3E%3Cpath fill="%23ffda63" d="M0 1.41l2.83 2.83L38.59 40 40 38.59zM1.41 0L37.17 37.17 40 40l-2.83-2.83z"/%3E%3C/g%3E%3C/svg%3E');
+            overflow: hidden; /* Prevent scrollbar during fade-out */
+        }
+
+        .modal {
+            background-color: var(--deped-white);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .modal:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        h2 {
+            font-family: 'Candu', sans-serif;
+            color: var(--deped-blue);
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        p {
+            margin-bottom: 25px;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s ease-in-out, opacity 0.3s ease;
+        }
+
+        .button:hover {
+            transform: scale(1.08);
+        }
+
+        .confirm-button {
+            background-color: var(--deped-blue);
+            color: var(--deped-yellow);
+            box-shadow: 0 2px 5px rgba(0, 48, 143, 0.5);
+        }
+
+        .confirm-button:hover {
+            background-color: var(--deped-yellow);
+            color: var(--deped-blue);
+            box-shadow: 0 4px 8px rgba(255, 218, 99, 0.7);
+        }
+
+        .cancel-button {
+            background-color: var(--deped-gray);
+            color: var(--text-dark);
+            box-shadow: 0 2px 5px rgba(211, 211, 211, 0.5);
+        }
+
+        .cancel-button:hover {
+            background-color: #ccc;
+            box-shadow: 0 4px 8px rgba(204, 204, 204, 0.7);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        .fade-out {
+            opacity: 0;
+            pointer-events: none; /* Disable interactions during fade out */
+        }
+    </style>
+</head>
+<body>
+    <div class="modal" id="logoutModal">
+        <h2>Confirm Logout</h2>
+        <p>Are you sure you want to log out of the DepEd Enrollment Dashboard?</p>
+        <div class="button-container">
+            <button class="button confirm-button" id="confirmLogout">Yes, Logout</button>
+            <button class="button cancel-button" id="cancelLogout">No, Stay Here</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const confirmLogoutBtn = document.getElementById('confirmLogout');
+            const cancelLogoutBtn = document.getElementById('cancelLogout');
+            const logoutModal = document.getElementById('logoutModal');
+
+            confirmLogoutBtn.addEventListener('click', function() {
+                // Add fade-out effect
+                logoutModal.classList.add('fade-out');
+                // Redirect to the root URL after a short delay
+                setTimeout(function() {
+                    window.location.href = "/";
+                }, 300); // Adjust delay as needed
+            });
+
+            cancelLogoutBtn.addEventListener('click', function() {
+                window.history.back();
+            });
+        });
+    </script>
+</body>
+</html>

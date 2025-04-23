@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TANAW: Nakaraang Panahon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Candu&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* DepEd Solid Color Palette */
+        :root {
+            --deped-blue: #00308F; /* Deep Blue */
+            --deped-yellow: #FFDA63; /* Golden Yellow */
+            --deped-light-blue: #ADD8E6; /* Light Blue */
+            --deped-white: #FFFFFF;
+            --deped-gray: #D3D3D3;
+            --text-dark: #333;
+            --text-light: #777;
+            --box-shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.08);
+            --box-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --transition-default: all 0.3s ease-in-out;
+            --border-radius-md: 10px;
+            --border-radius-sm: 5px;
+        }
+
+        /* DepEd Fonts */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--deped-white);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--deped-white);
+            margin-bottom: 0.6em;
+            letter-spacing: -0.5px;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            animation: fadeInDown 0.8s ease-out;
+            margin-bottom: 0;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--deped-blue);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--deped-blue);
+            margin-bottom: 1em;
+        }
+
+        /* Solid Header Section */
+        header {
+            background-color: var(--deped-blue);
+            color: var(--deped-white);
+            padding: 20px;
+            border-radius: var(--border-radius-md);
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-color: rgba(255, 218, 99, 0.1);
+            transform: rotate(-20deg);
+            z-index: -1;
+        }
+
+        header .logo-area {
+            display: flex;
+            align-items: center;
+        }
+
+        header .logo-area img {
+            height: 85px; /* Adjusted logo height */
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        header .logo-area h1 {
+            font-size: 1.1rem; /* Adjusted text size */
+            font-weight: bold;
+            margin: 0;
+            line-height: 1;
+        }
+
+        /* Navigation and Account Dropdown Container */
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Solid Navigation Bar */
+        nav {
+            background-color: transparent;
+            border-radius: var(--border-radius-md);
+            padding: 0;
+            margin: 0;
+            animation: none;
+            transform: none;
+            opacity: 1;
+            margin-right: 15px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        nav ul li a {
+            display: inline-flex;
+            padding: 8px 15px;
+            text-decoration: none;
+            color: var(--deped-blue);
+            background-color: var(--deped-white);
+            border: 1px solid var(--deped-yellow);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition-default);
+            align-items: center; /* Vertically align icon and text */
+            white-space: nowrap;
+        }
+
+        nav ul li a:hover {
+            background-color: var(--deped-yellow);
+            color: var(--deped-blue);
+            border-color: var(--deped-yellow);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        nav ul li a:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--deped-light-blue);
+        }
+
+
+        /* Hamburger Menu */
+        .hamburger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            gap: 6px;
+            z-index: 103;
+        }
+
+        .hamburger-menu .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--deped-white);
+            border-radius: 3px;
+            transition: var(--transition-default);
+        }
+
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 101;
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--deped-blue);
+            width: 300px;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--box-shadow-sm);
+            z-index: 102;
+            margin-top: 0;
+        }
+
+        .mobile-nav.open {
+            display: block;
+        }
+
+        .mobile-nav .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: var(--deped-yellow);
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .mobile-nav ul li a {
+            display: block;
+            text-decoration: none;
+            color: var(--deped-yellow);
+            padding: 12px 20px;
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition-default);
+            text-align: center;
+            width: 100%;
+        }
+
+        .mobile-nav ul li a:hover {
+            background-color: rgba(255, 255, 99, 0.1);
+        }
+
+        /* Account Pop-up */
+        .account-popup {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            background-color: var(--deped-white);
+            border: 1px solid var(--deped-gray);
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--box-shadow-sm);
+            padding: 15px;
+            z-index: 101;
+            width: 150px;
+            text-align: center;
+        }
+
+        .account-popup h4 {
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .account-popup button {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--deped-light-blue);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--deped-white);
+            color: var(--deped-blue);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition-default);
+        }
+
+        .account-popup button:hover {
+            background-color: var(--deped-light-blue);
+            color: var(--deped-blue);
+        }
+
+        /* Solid Highlights Section */
+        #highlights {
+            background-color: var(--deped-yellow);
+            color: var(--deped-blue);
+            padding: 20px;
+            text-align: center;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--box-shadow-sm);
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            animation: pulse 1.5s infinite alternate;
+            z-index: 1;
+        }
+
+        #highlights i {
+            margin-right: 15px;
+        }
+
+        /* Animations */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInDown {
+            from { transform: translateY(-15px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.03); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px;
+            }
+
+            header .logo-area {
+                align-items: center;
+            }
+
+            header .logo-area img {
+                height: 70px;
+                margin-right: 10px;
+            }
+
+            header .logo-area h1 {
+                font-size: 0.5rem;
+            }
+
+            nav {
+                display: none; /* Hide the main navigation on smaller screens */
+            }
+
+            .header-right {
+                justify-content: flex-end; /* Move hamburger to the right */
+                width: auto;
+            }
+
+            .hamburger-menu {
+                display: flex; /* Show the hamburger menu */
+            }
+
+            .account-popup {
+                top: 55px;
+                right: 10px;
+                width: 160px;
+                padding: 10px;
+            }
+
+            .account-popup h4 {
+                font-size: 1rem;
+                margin-bottom: 8px;
+            }
+
+            .account-popup button {
+                font-size: 0.9rem;
+                padding: 8px 12px;
+                margin-bottom: 6px;
+            }
+
+            #reportFrame {
+                height: 1200px; /* Adjust map height for smaller screens */
+            }
+
+            #geographic-view-section {
+                padding: 10px;
+            }
+
+            .geographic-view-header h3 {
+                font-size: 1.4rem;
+            }
+
+            .geographic-view-content {
+                padding: 15px;
+            }
+
+            footer p {
+                font-size: 0.9rem !important;
+            }
+        }
+
+        nav ul li a i {
+            margin-right: 5px; /* Adjusted icon margin */
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-area">
+            <img src="/static/logo (1).png" alt="DepEd Logo" style="height: 85px;">
+            <h1>TRACKING & ANALYTICS FOR NATIONWIDE ACADEMIC WATCH</h1>
+        </div>
+
+        <div class="header-right">
+            <nav>
+                <ul>
+                    <li><a href="/home"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="/report"><i class="fas fa-file-alt"></i> Reports</a></li>
+                    <li><a href="#" id="accountBtn"><i class="fas fa-user-circle"></i></a></li>
+                </ul>
+            </nav>
+            <div class="hamburger-menu" id="hamburger">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+        <div class="mobile-nav-overlay" id="navOverlay"></div>
+        <div class="mobile-nav" id="mobileNav">
+            <button class="close-btn" id="closeNav"><i class="fas fa-times"></i></button>
+            <ul>
+                <li><a href="/upload"><i class="fas fa-cogs"></i> Admin</a></li>
+                <li><a href="/help"><i class="fas fa-question-circle"></i> Help</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="account-popup" id="accountPopup">
+        <h4>Account</h4>
+        <button onclick="window.location.href='/upload'"><i class="fas fa-cogs"></i> Admin</button>
+        <button onclick="window.location.href='/help'"><i class="fas fa-question-circle"></i> Help</button>
+        <button onclick="window.location.href='/logout'"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.getElementById('hamburger');
+            const mobileNav = document.getElementById('mobileNav');
+            const navOverlay = document.getElementById('navOverlay');
+            const closeNav = document.getElementById('closeNav');
+            const accountBtn = document.getElementById('accountBtn');
+            const accountPopup = document.getElementById('accountPopup');
+
+            hamburger.addEventListener('click', function() {
+                mobileNav.classList.add('open');
+                navOverlay.style.display = 'block';
+            });
+
+            closeNav.addEventListener('click', function() {
+                mobileNav.classList.remove('open');
+                navOverlay.style.display = 'none';
+            });
+
+            navOverlay.addEventListener('click', function() {
+                mobileNav.classList.remove('open');
+                navOverlay.style.display = 'none';
+            });
+
+            accountBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                accountPopup.style.display = (accountPopup.style.display === 'block') ? 'none' : 'block';
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!accountBtn.contains(event.target) && !accountPopup.contains(event.target)) {
+                    accountPopup.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+    <footer style="background-color: var(--deped-light-blue); color: var(--deped-blue); text-align: center; padding: 20px; border-radius: var(--border-radius-md); margin-top: 30px; box-shadow: var(--box-shadow-sm);">
+        <p style="font-size: 1.1rem; font-weight: bold;">"Susi sa Kinabukasan" - Empowering Filipino Education <i class="fas fa-book-open"></i></p>
+        <p style="font-size: 0.9rem;">Data-driven insights for a brighter future, powered by innovation.</p>
+        <p id="copyright" style="font-size: 0.8rem; color: var(--text-light);">© 2025 DepEd Enrollment Dashboard. All rights reserved.</p>
+    </footer>
+
+</script>
+<script>
+    function updateCopyrightYear() {
+        const year = new Date().getFullYear();
+        document.getElementById('copyright').textContent = `© ${year} DepEd Enrollment Dashboard. All rights reserved.`;
+    }
+
+    updateCopyrightYear();
+
+    const footer = document.querySelector('footer');
+    if (footer) {
+        footer.addEventListener('mouseover', () => {
+            footer.style.backgroundColor = ('var(--deped-yellow)');
+            footer.style.color = ('var(--deped-blue)');
+        });
+        footer.addEventListener('mouseout', () => {
+            footer.style.backgroundColor = ('var(--deped-light-blue)');
+            footer.style.color = ('var(--deped-blue)');
+        });
+    }
+</script>
+</body>
+</html>

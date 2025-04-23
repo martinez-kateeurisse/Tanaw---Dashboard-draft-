@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DepEd Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Candu&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* DepEd Solid Color Palette */
+        :root {
+            --deped-blue: #00308F; /* Deep Blue */
+            --deped-yellow: #FFDA63; /* Golden Yellow */
+            --deped-light-blue: #ADD8E6; /* Light Blue */
+            --deped-white: #FFFFFF;
+            --deped-success: #28a745;
+            --deped-error: #dc3545;
+            --deped-gray: #D3D3D3;
+            --text-dark: #333;
+            --text-light: #777;
+            --box-shadow-sm: 0 4px 8px rgba(0, 0, 0, 0.08);
+            --box-shadow-md: 0 8px 16px rgba(0, 0, 0, 0.1);
+            --transition-default: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --border-radius-md: 12px;
+            --border-radius-sm: 6px;
+            --accent-color: #FFA000; /* Example accent color */
+            --red-color: #DC3545;
+            --black-color: #000000;
+            --secondary-blue: #4361EE;
+            --gradient-blue: linear-gradient(135deg, var(--deped-blue) 0%, var(--secondary-blue) 100%);
+            --gradient-yellow: linear-gradient(135deg, var(--deped-yellow) 0%, #FFEA88 100%);
+            --gradient-light-blue: linear-gradient(135deg, #cce5ff 0%, #99ccff 50%, #66b2ff 100%);
+            --deped-light-bg: #E0F2F7; /* Used for body background */
+        }
+
+        /* DepEd Fonts and Base Body Styles */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, var(--deped-white) 0%, var(--deped-light-bg) 100%); /* Light gradient background */
+            color: var(--text-dark);
+            line-height: 1.7;
+            padding: 30px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            animation: fadeIn 0.6s ease-out;
+            position: relative; /* Needed for toast positioning */
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--deped-blue);
+            margin-bottom: 0.6em;
+            letter-spacing: -0.7px;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            font-size: 3rem;
+            animation: fadeInDown 0.9s ease-out;
+            margin-bottom: 0.1em;
+            color: var(--deped-white);
+        }
+
+        h2 {
+            font-size: 2.4rem;
+            color: var(--deped-blue);
+            margin-bottom: 1em;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--deped-blue);
+            margin-bottom: 0.8em;
+            border-bottom: 4px solid var(--deped-yellow);
+            padding-bottom: 0.5em;
+        }
+
+        h4 {
+            font-size: 1.3rem;
+            color: var(--secondary-blue);
+            margin-top: 0;
+            margin-bottom: 1em;
+        }
+
+        /* Solid Header Section with Gradient (No changes requested) */
+        header {
+            background: var(--gradient-blue);
+            color: var(--deped-blue);
+            padding: 20px;
+            border-radius: var(--border-radius-md);
+            margin-bottom: 35px;
+            box-shadow: var(--box-shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            z-index: 100;
+            border-bottom: 4px solid var(--deped-yellow);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-color: rgba(255, 218, 99, 0.15);
+            border-radius: 50%;
+            transform: translate(-10%, -10%) rotate(-30deg);
+            z-index: -1;
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; transform: translate(-10%, -10%) rotate(-30deg) scale(1); }
+            100% { opacity: 1; transform: translate(-10%, -10%) rotate(-30deg) scale(1.05); }
+        }
+
+        header .logo-area {
+            display: flex;
+            align-items: center;
+        }
+
+        header .logo-area img {
+            height: 100px;
+            vertical-align: middle;
+            margin-right: 20px;
+            animation: fadeIn 1.1s ease-out, slideInLeft 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        header .logo-area h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1.2;
+            animation: fadeIn 1.1s ease-out, slideInRight 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Navigation and Account Dropdown Container */
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Stylish Navigation Bar with Hover Effect */
+        nav {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius-md);
+            padding: 0;
+            margin: 0;
+            animation: none;
+            transform: none;
+            opacity: 1;
+            margin-right: 15px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 10px 15px;
+            margin: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        nav ul li a {
+            display: inline-flex;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: var(--deped-white);
+            background-color: transparent;
+            border: 2px solid var(--deped-yellow);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            font-weight: 700;
+            transition: var(--transition-default);
+            align-items: center;
+            white-space: nowrap;
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        nav ul li a:hover {
+            background-color: var(--deped-yellow);
+            color: var(--deped-blue);
+            border-color: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        nav ul li a:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(173, 216, 230, 0.7);
+        }
+
+        nav ul li a i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Hamburger Menu */
+        .hamburger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            gap: 6px;
+            z-index: 103;
+            transition: var(--transition-default);
+        }
+         .hamburger-menu.active .bar:nth-child(1) {
+             transform: translateY(9px) rotate(45deg);
+         }
+         .hamburger-menu.active .bar:nth-child(2) {
+             opacity: 0;
+         }
+         .hamburger-menu.active .bar:nth-child(3) {
+             transform: translateY(-9px) rotate(-45deg);
+         }
+
+
+        .hamburger-menu .bar {
+            width: 28px;
+            height: 4px;
+            background-color: var(--deped-white);
+            border-radius: 5px;
+            transition: var(--transition-default);
+        }
+
+        /* Mobile Nav Overlay and Mobile Nav */
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 101;
+            backdrop-filter: blur(5px);
+             transition: opacity 0.3s ease-in-out;
+             opacity: 0;
+        }
+        .mobile-nav-overlay.open {
+            display: block;
+             opacity: 1;
+        }
+
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--gradient-blue);
+            width: 350px;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--box-shadow-md);
+            z-index: 102;
+            margin-top: 0;
+            opacity: 0;
+            animation: slideInDown 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .mobile-nav.open {
+            display: block;
+        }
+
+        .mobile-nav .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: var(--deped-yellow);
+            font-size: 1.6rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: var(--transition-default);
+        }
+
+        .mobile-nav .close-btn:hover {
+            color: var(--accent-color);
+            transform: rotate(90deg);
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            padding: 30px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .mobile-nav ul li a {
+            display: block;
+            text-decoration: none;
+            color: var(--deped-yellow);
+            padding: 15px 25px;
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition-default);
+            text-align: center;
+            width: 100%;
+            font-size: 1.1rem;
+            border: 2px solid var(--deped-yellow);
+        }
+
+        .mobile-nav ul li a:hover {
+            background-color: rgba(255, 218, 99, 0.2);
+            color: var(--deped-blue);
+            border-color: var(--accent-color);
+             transform: translateX(5px); /* Subtle slide on hover */
+        }
+
+        /* Account Pop-up (Slightly enhanced) */
+        .account-popup {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: var(--deped-white);
+            border: 1px solid var(--deped-gray);
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--box-shadow-md);
+            padding: 20px;
+            z-index: 101;
+            width: 180px;
+            text-align: center;
+            animation: fadeInUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .account-popup.open {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .account-popup h4 {
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .account-popup button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            background-color: var(--deped-light-blue);
+            color: var(--deped-blue);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition-default);
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        .account-popup button:hover {
+            background-color: var(--secondary-blue);
+            color: var(--deped-white);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #admin-panel-section {
+            padding: 20px 0;
+        }
+
+        .admin-panel-container {
+            background-color: transparent;
+            border-radius: var(--border-radius-md);
+            box-shadow: none;
+            overflow: visible;
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        #data-cleaning {
+            position: relative;
+            z-index: 1000; /* Ensure it's above file-upload */
+        }
+        
+        .upload-section {
+            flex: 1;
+            background-color: var(--deped-white);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--box-shadow-sm);
+            padding: 25px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.3s ease-in-out; /* Add box-shadow to transition */
+        }
+
+        .upload-section:hover {
+             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Subtle hover shadow */
+             transform: translateY(-3px); /* Subtle hover lift */
+        }
+
+
+        .upload-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 350px;
+            margin: 15px 0;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-button {
+            display: inline-block;
+            padding: 8px 20px;
+            font-size: 1rem;
+            border-radius: var(--border-radius-sm);
+            border: 1px dashed var(--deped-blue);
+            background-color: var(--deped-light-blue);
+            color: var(--deped-blue);
+            width: 100%;
+            text-align: center;
+            transition: var(--transition-default);
+            box-sizing: border-box;
+        }
+        .file-input-button i {
+            margin-right: 8px;
+        }
+
+        .file-input-wrapper:hover .file-input-button {
+            background-color: #c1e7f5;
+            border-style: solid;
+        }
+
+        .file-name {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            min-height: 1.2em;
+            word-break: break-all;
+            font-style: italic; /* Italicize filename */
+        }
+
+        /* General button styles for upload and rerun */
+        .upload-section button[type="submit"],
+        #rerun-container button {
+            padding: 18px 25px;
+            background-color: var(--deped-blue);
+            color: var(--deped-yellow);
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-default), transform 0.1s ease;
+            max-width: 350px; /* Apply max-width to all relevant buttons */
+            width: 100%; /* Ensure they take full width up to max-width */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            display: inline-flex; /* Use flex for centering icon/text */
+            align-items: center;
+            justify-content: center;
+        }
+
+        #rerun-container button {
+            max-width: none; /* Remove max-width constraint for rerun button */
+            width: auto; /* Allow width to be determined by content + padding */
+            padding: 12px 25px; /* Ensure padding is set */
+        }
+
+        #rerun-container button i {
+            margin-right: 10px;
+        }
+
+        .upload-section button i {
+            margin-right: 10px;
+        }
+
+        .upload-section button[type="submit"]:hover,
+        #rerun-container button:hover {
+            background-color: var(--deped-yellow);
+            color: var(--deped-blue);
+            box-shadow: var(--box-shadow-md);
+            transform: translateY(-2px);
+        }
+        .upload-section button[type="submit"]:active,
+        #rerun-container button:active {
+            transform: translateY(0);
+        }
+         .upload-section button[type="submit"]:disabled,
+         #rerun-container button:disabled {
+             opacity: 0.7;
+             cursor: not-allowed;
+         }
+        /* Container for the dropdown */
+        .school-year-select {
+            position: relative;
+            width: 100%; 
+            display: flex;
+            justify-content: center; 
+            align-items: center; 
+            flex-direction: column;
+            max-width: 400px; 
+            margin: 0 auto; 
+        }
+
+        /* Label style */
+        .select-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            display: block;
+            text-align: center; 
+        }
+
+        /* Style for the dropdown select */
+        .styled-select {
+            width: 100%; 
+            height: 40px; 
+            padding: 10px 16px; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            color: var(--deped-blue); 
+            background-color: var(--deped-white); 
+            border: 2px solid #ccc; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            appearance: none; 
+            -webkit-appearance: none; 
+            -moz-appearance: none; 
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        /* Remove hover effect background color change */
+        .styled-select:hover {
+            transform: translateY(-2px); 
+        }
+
+        /* Active effect */
+        .styled-select:active {
+            transform: translateY(0);
+        }
+
+        /* Add custom arrow icon using pseudo element */
+        .styled-select::after {
+            content: '▼'; 
+            font-size: 1.2rem;
+            position: absolute;
+            top: 50%;
+            right: 10px; 
+            transform: translateY(-50%); 
+            pointer-events: none; 
+        }
+
+        /* Focus effect */
+        .styled-select:focus {
+            border-color: var(--deped-blue); 
+            outline: none; 
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); 
+        }
+
+
+        .data-management-button-container {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+    /* Data Management */
+    .data-management-button {
+        display: inline-block;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--deped-blue);
+        background-color: var(--deped-white);
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .data-management-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .data-management-button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+
+        /* Modal Overlay */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 500px;
+        width: 100%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Modal Header */
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-header h5 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .close-modal {
+        font-size: 20px;
+        cursor: pointer;
+        border: none;
+        background: none;
+    }
+
+    /* Modal Body */
+    .modal-body {
+        margin: 20px 0;
+    }
+
+    .modal-footer {
+        padding: 1rem 1.5rem;
+        background-color: var(--deped-gray);
+        border-top: 1px solid var(--deped-light-blue);
+        border-bottom-left-radius: var(--border-radius-md);
+        border-bottom-right-radius: var(--border-radius-md);
+        display: flex;
+        justify-content: flex-end;
+        align-items: center; /* Added this line */
+        gap: 0.5rem;
+    }
+
+    .btn-cancel i,
+    .btn-replace i {
+        vertical-align: middle; /* Added this line */
+        display: inline-block; /* Ensures vertical-align works as expected */
+    }
+
+    .btn-replace {
+        background-color: #d9534f;
+        color: white;
+    }
+
+    .btn-cancel:hover {
+        background-color: #999;
+    }
+
+    .btn-replace:hover {
+        background-color: #c9302c;
+    }
+         /* Animation for button text/icon change */
+         .loading-icon {
+             margin-right: 10px;
+             animation: fa-spin 2s infinite linear; /* Font Awesome spin animation */
+         }
+
+          .success-icon {
+              margin-right: 10px;
+              animation: bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Simple bounce animation */
+          }
+
+         @keyframes bounce-in {
+             0% { transform: scale(0); opacity: 0; }
+             60% { transform: scale(1.1); opacity: 1; }
+             80% { transform: scale(0.9); }
+             100% { transform: scale(1); }
+         }
+
+
+        #rerun-container { /* Changed from rerun tag to div#rerun-container */
+            text-align: center;
+            padding: 25px 0;
+            margin-top: 40px;
+            border-top: 1px solid var(--deped-gray);
+        }
+
+
+        .alert {
+            background-color: var(--deped-error);
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: left;
+             box-shadow: var(--box-shadow-sm);
+             border-left: 5px solid #c82333; /* Darker red */
+             display: flex; /* Align icon and text */
+             align-items: center;
+             gap: 15px; /* Space between icon/list */
+        }
+
+        .alert i {
+            font-size: 1.5rem; /* Larger icon */
+            color: #f5c6cb; /* Lighter red icon */
+        }
+
+        .alert ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            flex-grow: 1; /* Allow list to take available space */
+        }
+
+        .alert li {
+            font-size: 1rem;
+             margin-bottom: 5px; /* Space between list items */
+             padding-left: 0; /* Remove default list padding */
+             position: relative; /* Needed for custom bullet */
+        }
+        
+        .alert li:last-child {
+             margin-bottom: 0;
+        }
+
+         .alert li::before {
+            content: "\f06a"; /* Exclamation Circle */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 8px;
+             color: inherit; /* Inherit color from alert */
+             display: inline-block;
+             width: 1em; /* Give bullet some space */
+             margin-left: -1em; /* Pull bullet back to the left */
+        }
+
+        #toast-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 300px;
+            pointer-events: none; /* Allow clicks to pass through container */
+        }
+
+        .toast {
+            background-color: var(--deped-success);
+            color: white;
+            padding: 15px 20px;
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--box-shadow-sm);
+            font-size: 0.95rem;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncier transition */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+             pointer-events: auto; /* Make toast clickable if needed (e.g., close button) */
+        }
+
+        .toast.toast-error {
+            background-color: var(--deped-error);
+        }
+
+        .toast.toast-info {
+             background-color: var(--secondary-blue); /* Info color */
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast i {
+            font-size: 1.2rem;
+        }
+
+        .sample-template-button {
+            display: inline-block;
+            padding: 10px 16px;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--deped-blue);
+            background-color: var(--deped-white);
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .sample-template-button:hover {
+            background-color: var(--deped-yellow);
+            transform: translateY(-2px);
+        }
+
+        .sample-template-button:active {
+            background-color: var(--deped-yellow);
+            transform: translateY(0);
+        }
+        
+        .tooltip-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-left: 6px;
+            cursor: pointer;
+        }
+
+        .tooltip-icon {
+            font-size: 1rem;
+            color: var(--deped-gray);
+            user-select: none;
+        }
+
+        .tooltip-box {
+            display: none;
+            width: 300px;
+            background-color: var(--deped-white);
+            color: var(--text-dark);
+            text-align: left;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            position: absolute;
+            top: 120%;
+            left: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            font-size: 0.7rem;
+            line-height: 1.4;
+            z-index: 9999;
+        }
+        
+        .tooltip-wrapper:hover .tooltip-box {
+            display: block;
+        }
+
+        .tooltip-title {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        .columns-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+        }
+
+        .columns-grid ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+        .modal-overlay {
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1050; /* Higher than default Bootstrap modal */
+    }
+
+    .modal-content {
+        background-color: var(--deped-white);
+        border-radius: var(--border-radius-md);
+        box-shadow: var(--box-shadow-md);
+        width: auto; /* Adjust as needed */
+        max-width: 500px; /* Example max width */
+        margin: 1.5rem;
+    }
+
+    .modal-header {
+        background-color: var(--deped-light-blue);
+        color: var(--deped-blue);
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--deped-gray);
+        border-top-left-radius: var(--border-radius-md);
+        border-top-right-radius: var(--border-radius-md);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-title {
+        font-weight: bold;
+        font-size: 1.25rem;
+        color: var(--deped-blue);
+    }
+
+    .close-modal {
+        color: var(--text-light);
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
+    .close-modal:hover {
+        color: var(--text-dark);
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+        color: var(--text-dark);
+    }
+
+    .modal-body p {
+        margin-bottom: 1rem;
+    }
+
+    .modal-footer {
+        padding: 1rem 1.5rem;
+        background-color: var(--deped-gray);
+        border-top: 1px solid var(--deped-light-blue);
+        border-bottom-left-radius: var(--border-radius-md);
+        border-bottom-right-radius: var(--border-radius-md);
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+
+    .btn-cancel,
+    .btn-replace {
+        border: none;
+        padding: 0.75rem 1.25rem;
+        border-radius: var(--border-radius-sm);
+        color: var(--deped-white);
+        cursor: pointer;
+        transition: var(--transition-default);
+        box-shadow: var(--box-shadow-sm);
+        font-weight: bold;
+    }
+
+    .btn-cancel {
+        background-color: var(--deped-gray);
+        color: var(--text-dark);
+    }
+
+    .btn-cancel:hover {
+        background-color: #c0c0c0;
+    }
+
+    .btn-replace {
+        background-color: var(--deped-error);
+    }
+
+    .btn-replace:hover {
+        background-color: #c82333;
+    }
+
+    /* Ensure the default Bootstrap modal is hidden if it's also being used */
+    .modal.fade:not(.show) {
+        display: none;
+    }
+
+        /* Footer (No changes requested in structure/basic styles, adding transitions) */
+        footer {
+            background: var(--gradient-blue);
+            color: var(--deped-light-blue);
+            padding: 40px 20px;
+            border-radius: var(--border-radius-md);
+            margin-top: 40px;
+            box-shadow: var(--box-shadow-md);
+            animation: slideInUp 1s ease-out;
+             transition: all 0.3s ease-in-out; /* Add transition for hover */
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        footer:hover {
+             background: var(--gradient-blue); /* Change background on hover */
+             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+             transform: translateY(-3px);
+        }
+
+        footer div {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        footer h4 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--deped-yellow);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+             transition: color 0.3s ease-in-out; /* Add transition for h4 color */
+        }
+         footer:hover h4 {
+             color: var(--deped-yellow); /* Change h4 color on footer hover */
+         }
+
+
+        footer p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--deped-white);
+            opacity: 0.9;
+             transition: color 0.3s ease-in-out; /* Add transition for p color */
+        }
+         footer:hover p {
+             color: var(--deped-white); /* Change p color on footer hover */
+         }
+
+
+        footer hr {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 25px auto;
+            width: 80%;
+             transition: border-color 0.3s ease-in-out; /* Add transition for hr */
+        }
+         footer:hover hr {
+             border-top-color: rgba(255, 255, 255, 0.2); /* Change hr color on footer hover */
+         }
+
+        footer a {
+            text-decoration: none;
+            color: var(--deped-light-blue);
+            transition: color 0.3s ease-in-out;
+            font-size: 1rem;
+            margin: 0 15px;
+        }
+
+        footer a:hover {
+            color: var(--deped-light-blue); /* Keep original hover color for links */
+        }
+         footer:hover a {
+             color: var(--deped-light-blue); /* Change link color on footer hover */
+         }
+         footer:hover a:hover {
+             color: var(--deped-light-blue); /* Different hover color when footer is also hovered */
+         }
+
+        footer p#copyright {
+            font-size: 0.9rem;
+            margin-top: 25px;
+            opacity: 0.7;
+             transition: color 0.3s ease-in-out; /* Add transition for copyright */
+        }
+         footer:hover p#copyright {
+             color: var(--text-light); /* Change copyright color on footer hover */
+         }
+
+
+        /* Responsive Design (Minor adjustments) */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+
+            header {
+                padding: 15px;
+                margin-bottom: 25px;
+            }
+
+            header .logo-area img {
+                height: 80px; /* Slightly smaller logo on mobile */
+                margin-right: 15px;
+            }
+
+            header .logo-area h1 {
+                font-size: 1.2rem; /* Slightly smaller heading */
+            }
+
+            nav {
+                display: none;
+                margin-right: 0;
+            }
+
+            .header-right {
+                justify-content: flex-end;
+                width: auto;
+            }
+
+            .hamburger-menu {
+                display: flex;
+                width: 30px;
+                height: 30px;
+                gap: 5px;
+            }
+
+            .hamburger-menu .bar {
+                width: 24px;
+                height: 3px;
+            }
+
+            .account-popup {
+                top: 50px;
+                right: 15px;
+                width: 160px;
+                padding: 15px;
+            }
+
+            .account-popup h4 {
+                font-size: 1.1rem;
+                margin-bottom: 10px;
+            }
+
+            .account-popup button {
+                font-size: 0.9rem;
+                padding: 8px 12px;
+                margin-bottom: 8px;
+            }
+
+            .admin-panel-container {
+                 flex-direction: column; /* Stack sections vertically on mobile */
+                 gap: 20px; /* Reduce gap */
+            }
+
+            .upload-section {
+                 padding: 20px; /* Reduce padding */
+            }
+
+
+            #reportFrame {
+                height: 800px; /* Adjust map height for smaller screens */
+            }
+
+            #geographic-view-section {
+                padding: 10px;
+            }
+
+            .geographic-view-header h3 {
+                font-size: 1.4rem;
+            }
+
+            .geographic-view-content {
+                padding: 15px;
+            }
+
+            footer {
+                padding: 30px 15px;
+            }
+
+            footer h4 {
+                font-size: 1.4rem;
+            }
+
+            footer p {
+                font-size: 1rem;
+            }
+
+            footer a {
+                font-size: 0.9rem;
+                margin: 0 10px;
+            }
+
+        }
+
+        /* Keyframe Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-15px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(15px); opacity: 0; }
+            to { opacity: 1; transform: translateX(0); opacity: 1; }
+        }
+         @keyframes fadeInUp {
+             from { opacity: 0; transform: translateY(10px); }
+             to { opacity: 1; transform: translateY(0); }
+         }
+          @keyframes slideInDown {
+             from { transform: translate(-50%, -60%); opacity: 0; } /* Adjust start for center positioning */
+             to { transform: translate(-50%, -50%); opacity: 1; }
+          }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-area">
+            <img src="/static/logo (1).png" alt="DepEd Logo" style="height: 100px;">
+            <h1>TRACKING & ANALYTICS FOR NATIONWIDE ACADEMIC WATCH</h1>
+        </div>
+
+        <div class="header-right">
+            <nav>
+                <ul>
+                    <li><a href="/home"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="/report"><i class="fas fa-file-alt"></i> Reports</a></li>
+                    <li><a href="#" id="accountBtn"><i class="fas fa-user-circle"></i></a></li>
+                </ul>
+            </nav>
+            <div class="hamburger-menu" id="hamburger">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+        <div class="mobile-nav-overlay" id="navOverlay"></div>
+        <div class="mobile-nav" id="mobileNav">
+            <button class="close-btn" id="closeNav"><i class="fas fa-times"></i></button>
+            <ul>
+                <li><a href="/upload"><i class="fas fa-cogs"></i> Admin</a></li>
+                <li><a href="/help"><i class="fas fa-question-circle"></i> Help</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="account-popup" id="accountPopup">
+        <h4>Account</h4>
+        <button onclick="window.location.href='/upload'"><i class="fas fa-cogs"></i> Admin</button>
+        <button onclick="window.location.href='/help'"><i class="fas fa-question-circle"></i> Help</button>
+        <button onclick="window.location.href='/logout'"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <section id="admin-panel-section">
+        <div class="admin-panel-container">
+            <div class="upload-section fade-in-on-scroll" id="data-cleaning">
+                <h2><i class="fas fa-broom"></i> Clean Enrollment Data</h2>
+                <form action="/clean" method="POST" enctype="multipart/form-data" id="cleanForm">
+                    <div class="sample-template">
+                        <a href="{{ url_for('download_template') }}" class="sample-template-button">
+                            📥 Download Sample Template
+                        </a>
+                        <div class="tooltip-wrapper">
+                            <i class="fas fa-circle-question tooltip-icon"></i>
+                            <div class="tooltip-box" id="tooltipBox">
+                                <p class="tooltip-title"><strong>Expected Column Names:</strong></p>
+                                <div class="columns-grid">
+                                    <ul>
+                                        <li>Region</li>
+                                        <li>Division</li>
+                                        <li>District</li>
+                                        <li>BEIS School ID</li>
+                                        <li>School Name</li>
+                                        <li>Street Address</li>
+                                        <li>Province</li>
+                                        <li>Municipality</li>
+                                        <li>Legislative District</li>
+                                        <li>Barangay</li>
+                                        <li>Sector</li>
+                                        <li>School Subclassification</li>
+                                        <li>School Type</li>
+                                        <li>Modified COC</li>
+                                    </ul>
+                                    <ul>
+                                        <li><strong>K - G6:</strong> [Male, Female]</li>
+                                        <li><strong>Elem NG:</strong> [Male, Female]</li>
+                                        <li><strong>G7 – G10:</strong> [Male, Female]</li>
+                                        <li><strong>JHS NG:</strong> [Male, Female]</li>
+                                        <li><strong>G11 - G12:</strong> ABM, HUMSS, STEM, GAS, PBM, TVL, SPORTS, ARTS [Male, Female]</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="font-size: 0.7rem; margin-top: 10px; color: var(--text-light);">
+                            Use this template to format your data correctly.
+                        </p>
+                    </div>
+                    <div class="file-input-wrapper">
+                        <span class="file-name" id="uncleaned-filename">No chosen file.</span>
+                        <span class="file-input-button"><i class="fas fa-file-csv"></i> Choose Uncleaned CSV...</span>
+                        <input type="file" name="uncleaned_file" id="uncleaned_file_input" accept=".csv" required />
+                    </div>
+                    <br>
+                    <button type="submit"><i class="fas fa-upload"></i> Upload to Clean Data</button>
+                </form>
+                <p style="font-size: 0.8rem; margin-top: 10px; margin-bottom: 32px; color: var(--text-light);">Cleaned data saves automatically to your PC.</p>
+            </div>
+    
+            <div class="upload-section fade-in-on-scroll" id="file-upload">
+                <h2><i class="fas fa-database"></i> Upload Enrollment Data</h2>
+    
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <ul>
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+    
+                <form action="/upload" method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <!-- School Year Dropdown -->
+                    <div class="school-year-select" style="margin-bottom: 1rem;">
+                        <label for="school_year" class="select-label"><i class="fas fa-calendar-alt"></i> Select School Year:</label>
+                        <select name="school_year" id="school_year" required class="styled-select">
+                            <option value="">-- Choose a school year --</option>
+                            <option value="2016-2017">2016–2017</option>
+                            <option value="2017-2018">2017–2018</option>
+                            <option value="2018-2019">2018–2019</option>
+                            <option value="2019-2020">2019–2020</option>
+                            <option value="2020-2021">2020–2021</option>
+                            <option value="2021-2022">2021–2022</option>
+                            <option value="2022-2023">2022–2023</option>
+                            <option value="2023-2024">2023–2024</option>
+                            <option value="2023-2024">2024–2025</option>
+                        </select>
+                    </div>
+                    <!-- File input -->
+                    <div class="file-input-wrapper">
+                        <span class="file-name" id="upload-filename">No chosen file.</span>
+                        <span class="file-input-button"><i class="fas fa-file-csv"></i> Choose Cleaned CSV...</span>
+                        <input type="file" name="file" id="upload_file_input" accept=".csv" required />
+                    </div>
+    
+                    <br>
+                    <button type="submit"><i class="fas fa-check-circle"></i> Upload to Dashboard</button>
+                </form>
+    
+                <p style="font-size: 0.8rem; margin-top: 10px; margin-bottom: 32px; color: var(--text-light);">
+                    Uploaded data updates dashboard views.
+                </p>
+            </div>
+        </div>
+
+        <!-- Re-run container moved here to ensure it's aligned at the bottom -->
+        <div id="rerun-container">
+            <form action="/rerun_app" method="post" id="rerunForm">
+                <button type="submit" id="rerunButton"><i class="fas fa-sync-alt"></i> Re-run Application</button>
+            </form>
+        </div>
+        <!-- Data Management -->
+        <div class="data-management-button-container fade-in-on-scroll">
+            <a href="{{ url_for('data_management') }}" class="data-management-button">
+                <i class="fas fa-tools"></i> Go to Data Management
+            </a>
+        </div>
+        {% if show_modal %}
+        <div class="modal-overlay" id="replaceModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle text-warning mr-2"></i> Warning</h5>
+                    <button type="button" class="close-modal" onclick="closeModal()">X</button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ warning_message }}</p>
+                    <p><strong>Dataset to be uploaded:</strong> {{ filename }}</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ url_for('upload') }}" class="btn-cancel">Cancel</a>
+                    <form action="{{ url_for('upload_confirm') }}" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="school_year" value="{{ school_year }}">
+                        <input type="hidden" name="filename" value="{{ filename }}">
+                        <input type="hidden" name="file_data" value="{{ file_data }}">
+                        <button type="submit" class="btn-replace"><i class="fas fa-trash mr-2"></i> Upload and Replace</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Show the modal when the page loads
+            window.onload = function() {
+                var modal = document.getElementById('replaceModal');
+                if (modal) {
+                    modal.style.display = 'flex';
+                }
+            };
+
+            // Close the modal
+            function closeModal() {
+                var modal = document.getElementById('replaceModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        </script>
+        {% endif %}
+        <!-- Footer -->
+        <footer>
+            <div>
+                <h4><i class="fas fa-university" style="margin-right: 10px;"></i> Department of Education</h4>
+                <p>Empowering the Nation Through Quality Education.</p>
+                <hr>
+                <div>
+                    <a href="/home">Home</a>
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/report">Reports</a>
+                    <a href="/help">Help</a>
+                    <a href="/upload">Admin</a>
+                </div>
+                <p id="copyright">© 2025 DepEd Enrollment Dashboard. All rights reserved.</p>
+            </div>
+        </footer>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.getElementById('hamburger');
+            const mobileNav = document.getElementById('mobileNav');
+            const navOverlay = document.getElementById('navOverlay');
+            const closeNav = document.getElementById('closeNav');
+            const accountBtn = document.getElementById('accountBtn');
+            const accountPopup = document.getElementById('accountPopup');
+            const toastContainer = document.getElementById('toast-container');
+            const cleanForm = document.getElementById('cleanForm');
+            const uploadForm = document.getElementById('uploadForm');
+            const rerunForm = document.getElementById('rerunForm'); // Get rerun form
+            const rerunButton = document.getElementById('rerunButton'); // Get rerun button
+
+            function toggleMobileNav(isOpen) {
+                if (isOpen) {
+                    hamburger.classList.add('active');
+                    mobileNav.classList.add('open');
+                    navOverlay.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    hamburger.classList.remove('active');
+                    mobileNav.classList.remove('open');
+                    navOverlay.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            hamburger.addEventListener('click', function() {
+                const isOpen = mobileNav.classList.contains('open');
+                toggleMobileNav(!isOpen);
+            });
+
+            closeNav.addEventListener('click', function() {
+                toggleMobileNav(false);
+            });
+
+            navOverlay.addEventListener('click', function() {
+                toggleMobileNav(false);
+            });
+
+             accountBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                accountPopup.classList.toggle('open');
+            });
+
+             document.addEventListener('click', function(event) {
+                // Close account popup if clicking outside
+                if (accountPopup.classList.contains('open') && !accountPopup.contains(event.target) && !accountBtn.contains(event.target)) {
+                    accountPopup.classList.remove('open');
+                }
+                // Close mobile nav if clicking outside (and it's open)
+                if (mobileNav.classList.contains('open') && !mobileNav.contains(event.target) && !hamburger.contains(event.target)) {
+                    toggleMobileNav(false);
+                }
+            });
+
+
+             function handleFileInputChange(inputId, filenameId) {
+                const input = document.getElementById(inputId);
+                const filenameSpan = document.getElementById(filenameId);
+                if (input) {
+                    input.addEventListener('change', function(e) {
+                        if (e.target.files && e.target.files.length > 0) {
+                            filenameSpan.textContent = `File:  "${e.target.files[0].name}"`;
+                        } else {
+                            filenameSpan.textContent = 'No chosen file.';
+                        }
+                    });
+                }
+            }
+            handleFileInputChange('uncleaned_file_input', 'uncleaned-filename');
+            handleFileInputChange('upload_file_input', 'upload-filename');
+
+
+            function showToast(message, type = 'success', duration = 4000) {
+                if (!toastContainer) return;
+
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+
+                let iconClass = 'fas fa-check-circle';
+                if (type === 'info') iconClass = 'fas fa-info-circle';
+
+                toast.innerHTML = `<i class="${iconClass}"></i> ${message}`;
+                toastContainer.appendChild(toast);
+
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        toast.classList.add('show');
+                    });
+                });
+
+                // Hide and remove toast after duration
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    toast.addEventListener('transitionend', () => {
+                        // Ensure the element is still in the container before removing
+                        if (toast.parentNode === toastContainer) {
+                            toastContainer.removeChild(toast);
+                        }
+                    }, { once: true });
+                     // Fallback timeout in case transitionend doesn't fire
+                     setTimeout(() => {
+                         if (toast.parentNode === toastContainer) {
+                             toastContainer.removeChild(toast);
+                         }
+                     }, 600); // Should be slightly longer than the CSS transition
+                }, duration);
+            }
+
+
+            // --- Button Submission with Delay and Animation for Upload Forms ---
+            const handleUploadSubmit = (e, form, fileInputId, defaultButtonHtml) => {
+                // Prevent default submission initially to handle it with UI updates
+                e.preventDefault();
+
+                const fileInput = document.getElementById(fileInputId);
+                const submitButton = form.querySelector('button[type="submit"]');
+
+                if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+                    showToast('Please select a file to upload.', 'error');
+                    return; // Stop if no file is selected
+                }
+
+                // Show loading state immediately
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin loading-icon"></i> Uploading...';
+                showToast(`Preparing "${fileInput.files[0].name}" for upload...`, 'info', 6000);
+
+                 setTimeout(() => {
+                     form.submit();
+                      setTimeout(() => {
+                          submitButton.innerHTML = '<i class="fas fa-check-circle success-icon"></i> Complete!';
+                          showToast('Upload process initiated. Check server response or dashboard.', 'success', 10000);
+
+                           setTimeout(() => {
+                               submitButton.disabled = false;
+                               submitButton.innerHTML = defaultButtonHtml; 
+                           }, 1500); 
+
+                      }, 5000); 
+
+                 }, 50); 
+
+            };
+
+            if(cleanForm) {
+                 const cleanButtonHtml = cleanForm.querySelector('button[type="submit"]').innerHTML;
+                 cleanForm.addEventListener('submit', (e) => handleUploadSubmit(e, cleanForm, 'uncleaned_file_input', cleanButtonHtml));
+            }
+
+
+            if(uploadForm) {
+                 const uploadButtonHtml = uploadForm.querySelector('button[type="submit"]').innerHTML;
+                 uploadForm.addEventListener('submit', (e) => handleUploadSubmit(e, uploadForm, 'upload_file_input', uploadButtonHtml));
+            }
+            // Close modal automatically if user cancels
+            document.querySelectorAll('[data-dismiss="modal"]').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Optionally close modal here or clear the form
+                    document.querySelector('.modal').style.display = 'none';
+                });
+            });
+
+            if (rerunForm && rerunButton) {
+                const originalRerunButtonHtml = rerunButton.innerHTML; 
+
+                rerunForm.addEventListener('submit', function(e) {
+                    e.preventDefault(); 
+
+                    rerunButton.disabled = true; 
+                    rerunButton.innerHTML = '<i class="fas fa-spinner fa-spin loading-icon"></i> Re-running...'; // Show loading state
+
+                    showToast('Initiating application re-run. This may take a moment.', 'info', 6000); // Show informative toast
+                    setTimeout(() => {
+                        rerunForm.submit(); 
+                    }, 5000); 
+                });
+            }
+
+
+            // Intersection Observer for fade-in effect
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observerCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+
+            const scrollObserver = new IntersectionObserver(observerCallback, observerOptions);
+            const elementsToAnimate = document.querySelectorAll('.fade-in-on-scroll');
+
+            elementsToAnimate.forEach(el => {
+                scrollObserver.observe(el);
+            });
+
+             // Update copyright year dynamically
+             function updateCopyrightYear() {
+                 const year = new Date().getFullYear();
+                 const copyrightElement = document.getElementById('copyright');
+                 if(copyrightElement) {
+                    copyrightElement.textContent = `© ${year} DepEd Enrollment Dashboard. All rights reserved.`;
+                 }
+             }
+             updateCopyrightYear();
+
+             // The footer hover effects were added directly in CSS in this version for better performance.
+
+        }); // End DOMContentLoaded
+    </script>
+
+</body>
+</html>
