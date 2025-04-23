@@ -791,7 +791,101 @@
     <button onclick="window.location.href='/help'"><i class="fas fa-question-circle"></i> Help</button>
     <button onclick="window.location.href='/logout'"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </div>
+    <div class="dashboard-controls">
+        <div class="school-year-selector">
+            <form method="POST" action="{{ url_for('dashboard') }}" id="schoolYearForm">
+                <label for="school_year" class="selector-label">School Year:</label>
+                <select name="school_year" id="school_year" class="school-year-dropdown" onchange="document.getElementById('schoolYearForm').submit()">
+                    {% if not selected_year and available_years %}
+                        <option value="" disabled selected>Select School Year</option>
+                    {% elif not available_years %}
+                        <option value="" disabled selected>No data available</option>
+                    {% endif %}
 
+                    {% for year in available_years %}
+                        <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>
+                            {{ year }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        :root {
+            /* Define your DepEd color palette and other variables */
+            --deped-blue: #00308f;
+            --deped-white: #ffffff;
+            --deped-gray: #cccccc;
+            --deped-light-gray: #e0e0e0;
+            --deped-secondary: #026aa7; /* Example secondary color */
+            --deped-accent: #f0ad4e; /* Example accent color */
+            --text-dark: #333;
+            --border-radius-sm: 5px;
+            --box-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            /* Add your font family here */
+            --font-primary: sans-serif;
+        }
+
+        body {
+            font-family: var(--font-primary); /* Apply the font to the body or relevant elements */
+        }
+
+        .dashboard-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: var(--deped-white);
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--box-shadow-sm);
+            /* Subtle gradient and border */
+            background-image: linear-gradient(to bottom, var(--deped-white), #f9f9f9);
+            border: 1px solid var(--deped-light-gray);
+        }
+
+        .school-year-selector {
+            display: flex;
+            align-items: center;
+        }
+
+        .selector-label {
+            font-weight: bold;
+            color: var(--deped-blue);
+            margin-right: 10px;
+        }
+
+        .school-year-dropdown {
+            padding: 8px 12px;
+            border: 1px solid var(--deped-gray);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            color: var(--text-dark);
+            background-color: var(--deped-white);
+            appearance: none;
+            -webkit-appearance: none;
+            /* Modernized arrow */
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 14 9" fill="%23333"><path d="M2 2l5 5 5-5"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center; /* Adjust position */
+            padding-right: 30px;
+            /* Hover and focus transitions */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .school-year-dropdown:hover {
+            border-color: var(--deped-secondary);
+        }
+
+        .school-year-dropdown:focus {
+            outline: none;
+            border-color: var(--deped-blue);
+            box-shadow: 0 0 8px var(--deped-accent); /* More prominent focus glow */
+        }
+    </style>
+    
     <section id="kpis"> <!-- KPIs (Summary Metrics) -->
         <div id="totalEnrollments" class="kpi-card"> <!--KPI Total Enrollments -->
             <div class="visualization-container">

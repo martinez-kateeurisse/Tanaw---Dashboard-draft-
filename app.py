@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, jsonify, url_for, send_file
+from flask import Flask, render_template, request, redirect, flash, jsonify, url_for, send_file, session
 import os
 from works import create_dash_app
 from werkzeug.utils import secure_filename
@@ -50,6 +50,43 @@ def save_data():
         print("No dataset path to save.")
     # Add other saving mechanisms as needed
 
+# --- Helper function to find available datasets ---
+def find_available_datasets():
+    """
+    Scans the DATA_MANAGEMENT_FOLDER for school year subdirectories
+    containing CSV files.
+
+    Returns:
+        dict: A dictionary mapping school years (like 'YYYY-YYYY') to
+              the full path of the first CSV file found in that year's folder.
+              Sorted by year descending (latest first).
+        list: A sorted list of available school year strings.
+    """
+    datasets = {}
+    years = []
+    if not os.path.exists(DATA_MANAGEMENT_FOLDER):
+        return {}, []
+
+    for year_dir in os.listdir(DATA_MANAGEMENT_FOLDER):
+        year_path = os.path.join(DATA_MANAGEMENT_FOLDER, year_dir)
+        if os.path.isdir(year_path):
+            # Basic check if the directory name looks like a school year
+            if "-" in year_dir: # Add more robust check if needed
+                for filename in os.listdir(year_path):
+                    if filename.lower().endswith(".csv"):
+                        full_path = os.path.join(year_path, filename)
+                        datasets[year_dir] = full_path
+                        years.append(year_dir)
+                        break # Found the first CSV, move to next year dir
+    
+    # Sort years descending (e.g., 2024-2025, 2023-2024)
+    years.sort(reverse=True)
+    # Create sorted dictionary based on sorted years
+    sorted_datasets = {year: datasets[year] for year in years}
+    
+    return sorted_datasets, years
+
+
 @app.route("/")
 def index():
     return render_template("account.html")
@@ -62,9 +99,64 @@ def home():
 def otheryear():
     return render_template("otheryear.html")
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=["GET", "POST"])
 def dashboard():
-    return render_template("dashboard.html")
+    available_datasets, available_years = find_available_datasets()
+    selected_year = session.get('selected_dashboard_year', None)
+    selected_file_path = session.get('selected_dashboard_file_path', None)
+
+    if request.method == "POST":
+        newly_selected_year = request.form.get("school_year")
+        if newly_selected_year in available_datasets:
+            selected_year = newly_selected_year
+            selected_file_path = available_datasets[selected_year]
+            session['selected_dashboard_year'] = selected_year
+            session['selected_dashboard_file_path'] = selected_file_path
+            print(f"Dashboard: Set selected year to {selected_year}, path: {selected_file_path}") # Debugging
+            # Redirect to GET to prevent form resubmission issues
+            # and ensure Dash app loads with session updated
+            return redirect(url_for('dashboard'))
+        else:
+            flash("Invalid school year selected.", "warning")
+            # Clear potentially invalid session data if selection fails
+            session.pop('selected_dashboard_year', None)
+            session.pop('selected_dashboard_file_path', None)
+            selected_year = None
+            selected_file_path = None
+
+    # --- Logic for GET request or if POST failed ---
+    # If no year is selected (initial load or after failed POST),
+    # try to default to the latest available year.
+    if not selected_year and available_years:
+        selected_year = available_years[0] # Default to the latest year
+        selected_file_path = available_datasets[selected_year]
+        session['selected_dashboard_year'] = selected_year
+        session['selected_dashboard_file_path'] = selected_file_path
+        print(f"Dashboard: Defaulting to latest year {selected_year}, path: {selected_file_path}") # Debugging
+    elif selected_year and selected_year not in available_datasets:
+        # Handle case where session year is no longer valid (file deleted?)
+        flash(f"Previously selected year ({selected_year}) data not found. Please select another.", "warning")
+        session.pop('selected_dashboard_year', None)
+        session.pop('selected_dashboard_file_path', None)
+        selected_year = None
+        selected_file_path = None
+        # Optionally default again here if desired
+        if available_years:
+             selected_year = available_years[0] # Default to the latest year
+             selected_file_path = available_datasets[selected_year]
+             session['selected_dashboard_year'] = selected_year
+             session['selected_dashboard_file_path'] = selected_file_path
+
+
+    # The Dash app (created by create_dash_app) needs to read
+    # session['selected_dashboard_file_path'] within its callbacks
+    # to load the correct data dynamically.
+
+    # Pass available years and the *currently* selected year to the template
+    return render_template("dashboard.html",
+                           available_years=available_years,
+                           selected_year=selected_year)
+
 
 @app.route("/comparison")
 def comparison():
@@ -312,11 +404,43 @@ def download_template():
 @app.route('/api/enrollment_data')
 @app.route('/api/enrollment_data')
 def get_enrollment_data():
-    file_path = get_dataset_path()
-    data = fetch_enrollment_records_from_csv(file_path)
-    data = fetch_summary_data_from_csv(file_path)
-    data['strandRegionMatrix'] = get_strand_distribution_by_region(file_path)
-    return jsonify(data)
+    # OPTION 1: Get path from session (if API is called AFTER year selection)
+    file_path = session.get('selected_dashboard_file_path')
+
+    # OPTION 2: Pass year as query parameter (e.g., /api/enrollment_data?year=2023-2024)
+    # selected_year = request.args.get('year')
+    # available_datasets, _ = find_available_datasets()
+    # file_path = available_datasets.get(selected_year)
+
+    if not file_path or not os.path.exists(file_path):
+        # Fallback or error handling: Use default, latest, or return error
+        available_datasets, years = find_available_datasets()
+        if years:
+             file_path = available_datasets[years[0]] # Fallback to latest
+             print(f"API Warning: No specific path found, falling back to latest: {file_path}")
+        else:
+             # Or maybe use the original default static path if it exists?
+             # file_path = get_dataset_path()
+             # if not os.path.exists(file_path):
+             return jsonify({"error": "No dataset selected or available."}), 404
+
+    print(f"API: Using data path: {file_path}") # Debugging
+    try:
+        # Use the dynamically determined file_path
+        # Note: fetch_enrollment_records_from_csv seems unused here based on previous code
+        summary_data = fetch_summary_data_from_csv(file_path)
+        strand_data = get_strand_distribution_by_region(file_path)
+
+        # Check if data loading was successful (functions might return {} on error)
+        if not summary_data:
+             return jsonify({"error": f"Failed to load summary data from {file_path}"}), 500
+
+        summary_data['strandRegionMatrix'] = strand_data
+        return jsonify(summary_data)
+    except Exception as e:
+        print(f"API Error: Failed to process data for {file_path}: {e}")
+        return jsonify({"error": f"Internal server error processing data: {str(e)}"}), 500
+
 
 @app.route('/rerun_app', methods=['POST'])
 def rerun_app():
